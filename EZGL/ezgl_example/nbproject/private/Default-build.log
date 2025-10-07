@@ -1,0 +1,5 @@
+./basic_application.cpp:28:10: fatal error: ezgl/application.hpp: No such file or directory
+ #include "ezgl/application.hpp"
+          ^~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [Makefile:68: basic_application] Error 1
