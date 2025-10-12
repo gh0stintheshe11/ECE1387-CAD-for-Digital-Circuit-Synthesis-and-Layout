@@ -1,3 +1,8 @@
+I spend so much time on the god forsaken parallelization that I missed the deadline.
+However I had so much fun with it that I THINK IT'S WORTH IT.
+FYI, I think I found something cool: the parallel router actually USES LESS TRACKS THAN THE SERIAL ONE SOMETIMES.
+so I did some digging and wrote about it in Q5.
+
 ## Q1. Test files plots and segments used
 
 ### cct1
@@ -111,6 +116,71 @@ Used segments = 2377
 Pin placement architecture significantly impacts routability as circuit complexity increases. For small circuits (cct1, cct2), both architectures achieve the same minimum W, but for larger circuits, distributed pin placement demonstrates clear advantages: 16.7% fewer tracks for cct3 (W=5 vs W=6) and 10% fewer for cct4 (W=9 vs W=10). This occurs because distributing pins across all four sides reduces channel congestion and provides more routing flexibility, while concentrating pins on two sides creates bottlenecks. Segment usage shows the opposite trend: top/bottom uses fewer segments for small circuits but more for large ones, suggesting distributed placement scales better with complexity. The tradeoff is that distributed pins improve routability and scalability at the cost of slightly longer routes in uncongested designs, while top/bottom is more efficient when resources are abundant but struggles under congestion.
 
 ## Q5. Parallelization
+
+### !?!?!? PARALLELIZATION USE LESS TRACKS !?!?!?
+
+| Test Case | Distributed |               | Top-Bottom |               |
+| --------- | ----------- | ------------- | ---------- | ------------- |
+|           | Min W       | Used Segments | Min W      | Used Segments |
+| cct1      | 3           | 30            | 3          | 30            |
+| cct2      | 4           | 111           | 4          | 109           |
+| cct3      | 5           | 689           | 6          | 703           |
+| cct4      | 8 (-1)      | 2244          | 8 (-2)     | 2215          |
+
+For cct4, the parallel router successfully routes with W=8 for both architectures, whereas the serial implementation requires W=9 (distributed) and W=10 (top/bottom). Seems the parallel router finds better solutions, and this behavior is more ovbious on larger circuits. My guess is that the parallel BFS explores the search space more diversely due to thread interleaving, leading to better path selections and less congestion. The serial BFS may get stuck in local minima, especially under tight resource constraints, while the parallel version's concurrent expansions help escape these traps.
+
+![new_cct4_distributed_min](./cct4_distributed_min_8_para4t.png)
+W = 8
+Used segments = 2244
+![new_cct4_topbottom_min](./cct4_topbottom_min_8_para4t.png)
+W = 8
+Used segments = 2215
+
+
+### Timing and Segment Usage Summary
+
+| Test Case | Version | Distributed |               |          | Top-Bottom |               |          |
+| --------- | ------- | ----------- | ------------- | -------- | ---------- | ------------- | -------- |
+|           |         | W           | Used Segments | time(ms) | W          | Used Segments | time(ms) |
+| cct1      | norm    | 3           | 33            | 0.654    | 3          | 31            | 0.543    |
+| cct1      | para_2t | 3           | 33            | 1.136    | 3          | 30            | 1.114    |
+| cct1      | para_2t | 4           | 32            | 1.578    | 4          | 31            | 1.543    |
+| cct1      | para_4t | 3           | 33            | 1.367    | 3          | 30            | 1.441    |
+| cct1      | para_4t | 4           | 30            | 1.845    | 4          | 30            | 1.785    |
+| cct1      | para_8t | 3           | 32            | 2.159    | 3          | 30            | 1.918    |
+| cct1      | para_8t | 4           | 30            | 2.367    | 4          | 30            | 2.461    |
+| cct2      | norm    | 4           | 139           | 2.835    | 4          | 144           | 3.234    |
+| cct2      | para_2t | 4           | 115           | 6.345    | 4          | 111           | 6.207    |
+| cct2      | para_2t | 5           | 118           | 7.729    | 5          | 116           | 7.653    |
+| cct2      | para_4t | 4           | 122           | 7.025    | 4          | 116           | 6.904    |
+| cct2      | para_4t | 5           | 111           | 7.907    | 5          | 109           | 7.662    |
+| cct2      | para_8t | 4           | FAILED        | FAILED   | 4          | FAILED        | FAILED   |
+| cct2      | para_8t | 5           | 108           | 9.879    | 5          | 110           | 10.005   |
+| cct3      | norm    | 5           | 712           | 38.369   | 6          | 717           | 48.61    |
+| cct3      | para_2t | 5           | 672           | 60.954   | 6          | 670           | 71.339   |
+| cct3      | para_2t | 6           | 693           | 74.184   | 7          | 676           | 81.333   |
+| cct3      | para_4t | 5           | FAILED        | FAILED   | 6          | 690           | 68.645   |
+| cct3      | para_4t | 6           | 673           | 68.812   | 7          | 666           | 78.587   |
+| cct3      | para_8t | 5           | FAILED        | FAILED   | 6          | 677           | 84.99    |
+| cct3      | para_8t | 6           | 668           | 83.608   | 7          | 663           | 93.208   |
+| cct4      | norm    | 9           | 2371          | 411.043  | 10         | 2377          | 480.201  |
+| cct4      | para_2t | 9           | FAILED        | FAILED   | 10         | 2209          | 599.321  |
+| cct4      | para_2t | 10          | 2204          | 600.79   | 11         | 2205          | 661.093  |
+| cct4      | para_4t | 9           | 2239          | 492.629  | 10         | 2218          | 540.531  |
+| cct4      | para_4t | 10          | 2222          | 547.372  | 11         | 2209          | 592.001  |
+| cct4      | para_8t | 9           | 2197          | 554.467  | 10         | 2195          | 591.495  |
+| cct4      | para_8t | 10          | 2206          | 598.034  | 11         | 2218          | 651.448  |
+
+### Analysis of Parallelization Results
+
+**Performance Characteristics:**
+slower execution time in exchange for significantly better solution quality. Across all test cases, the parallel router finds 6-22% fewer routing segments than the serial version, with the largest improvements on medium-sized circuits (cct2 showing 22% reduction). However, this comes at a 1.2-4x runtime cost due to synchronization overhead.
+
+**Thread Scaling:**
+Four threads emerged as the optimal configuration, providing the best balance of solution quality and stability. The 8-thread configuration shows diminishing returns, with no significant speedup over 4 threads, suggesting that synchronization contention limits scalability beyond 4 cores for these problem sizes.
+
+**Stability Issues:**
+The parallel implementation exhibits intermittent routing failures (5 out of 56 test cases) that do not occur in the serial version. These failures occur exclusively at minimum channel widths where routing resources are tightest, suggesting a race condition in the BFS exploration when multiple threads compete heavily for scarce resources. Thus, there might be a bug in the implementation that needs to be addressed. (My guess is there is a race condition in the index_map lookup or parent tracking.)
 
 ## Q6. Software Architecture and Design
 

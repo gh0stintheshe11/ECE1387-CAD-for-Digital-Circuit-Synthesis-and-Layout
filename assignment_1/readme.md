@@ -2,21 +2,33 @@
 
 ## Compilation
 
+### To compile and build the artifact, run:
 ```bash
 make
 ```
 
-This will compile the router executable.
+For parallel version:
+```bash
+make -f Makefile.parallel
+```
 
-To clean build artifacts:
+### To clean build artifacts:
 ```bash
 make clean
+```
+For parallel version:
+```bash
+make -f Makefile.parallel clean
 ```
 
 ## Usage
 
 ```bash
 ./router -f <circuit_file> [-a <architecture>] [-w <W>] [-i]
+```
+For parallel version:
+```bash
+./router_parallel -f <circuit_file> [-a <architecture>] [-w <W>] [-i] [-t <num_threads>]
 ```
 
 ### Arguments
@@ -29,6 +41,9 @@ make clean
   - If not specified, uses W from the input file
 - `-i` (optional): Enable GUI visualization
 - `-h` or `--help`: Display help message
+
+For parallel version:
+- `-t <num_threads>` (optional): Number of threads to use (default: 4)
 
 ## Examples
 
@@ -44,6 +59,9 @@ make clean
 
 # Override W to find minimum channel width
 ./router -f cct3.txt -a distributed -w 5 -i
+
+# Parallel router with 8 threads
+./router_parallel -f cct4.txt -a distributed -w 10 -i -t 8
 ```
 
 ## Output
@@ -60,3 +78,6 @@ If GUI is enabled (`-i`), a graphical window displays the routing solution with 
 
 - C++14 or later
 - GTK3 and Cairo (for GUI)
+
+For parallel version:
+- OpenMP (for parallelization)
