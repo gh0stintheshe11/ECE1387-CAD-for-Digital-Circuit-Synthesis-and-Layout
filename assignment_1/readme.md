@@ -52,6 +52,7 @@ The router reports:
 - Architecture used
 - Routing success/failure
 - Total number of routing segments used
+- Total routing time in milliseconds (does not include GUI time, just the routing algorithm)
 
 If GUI is enabled (`-i`), a graphical window displays the routing solution with color-coded nets.
 

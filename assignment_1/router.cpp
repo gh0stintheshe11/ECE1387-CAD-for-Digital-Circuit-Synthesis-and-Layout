@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <utility>
 #include <string>
+#include <chrono>
 using namespace std;
 
 // EZGL for GUI (only used if -i passed)
@@ -585,6 +586,9 @@ int main(int argc, char **argv)
     // Track pins for each net for visualization
     map<int, vector<Pin>> netPins;
 
+    // Start timing the routing algorithm
+    auto start_time = chrono::high_resolution_clock::now();
+
     bool ok = true;
     int net_id = 0;
     for (auto &kv : fanouts)
@@ -611,11 +615,18 @@ int main(int argc, char **argv)
         net_id++;
     }
 
+    // End timing
+    auto end_time = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
+    double runtime_ms = duration.count() / 1000.0;
+
     cout << (cfg.arch == Arch::DISTRIBUTED ? "Architecture: distributed\n"
                                            : "Architecture: top/bottom\n");
     if (ok)
     {
-        cout << "Routed successfully. Used segments = " << R.used_segments << "\n";
+        cout << "Routed successfully.\n";
+        cout << "Used segments = " << R.used_segments << "\n";
+        cout << "Routing time: " << runtime_ms << " ms\n";
         if (cfg.gui)
             run_gui(R, netPins);
     }
