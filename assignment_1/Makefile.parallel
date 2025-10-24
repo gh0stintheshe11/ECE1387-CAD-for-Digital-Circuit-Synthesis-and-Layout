@@ -1,99 +1,80 @@
 ########################################################################
-## Makefile for ECE1387 Assignment 1 - Parallel FPGA Router
+## Makefile — ECE1387 A1 parallel router (std::thread only)
 ########################################################################
 
 VERBOSE ?= 1
 ifeq ($(VERBOSE),1)
-	ECHO := 
+  ECHO :=
 else
-	ECHO := @
+  ECHO := @
 endif
 
+# debug | release
 CONF ?= debug
 
-# the compiler
-# For macOS: use g++-15 (or your installed version from homebrew)
-# For Linux: change to just g++
-CXX = /opt/homebrew/bin/g++-15
+# compiler (let env override; ECF usually has g++)
+CXX ?= g++
 
-# target EXE
-TARGET_DIR = .
-TARGET = router_parallel
+# output
+TARGET_DIR := .
+TARGET     := router_parallel
 
-# the version of GTK being used
-GTK_VERSION_NUM = 3.0
+# GTK (3.x) via pkg-config
+GTK_VER   := 3.0
+GTK_CFLAGS := $(shell pkg-config --cflags gtk+-$(GTK_VER))
+GTK_LIBS   := $(shell pkg-config --libs   gtk+-$(GTK_VER))
 
-# the base directory of EZGL
-EZGL_DIR = ezgl
+# EZGL sources (all .cpp in ezgl/)
+EZGL_DIR  := ezgl
+EZGL_SRCS := $(wildcard $(EZGL_DIR)/*.cpp)
 
-# get the source files
-SRCS = router_parallel.cpp $(wildcard $(EZGL_DIR)/*.cpp)
-HDRS = $(wildcard ./*.h $(EZGL_DIR)/*.hpp)
+# Router source: this is your std::thread version (not OpenMP)
+ROUTER_SRC := router_parallel.cpp
 
-# GTK includes and libs
-GTK_INCLUDE_DIRS := $(shell pkg-config --cflags gtk+-$(GTK_VERSION_NUM) x11)
-GTK_LIBS := $(shell pkg-config --libs gtk+-$(GTK_VERSION_NUM) x11)
+# include paths
+INC_DIRS := . $(EZGL_DIR) $(EZGL_DIR)/..
 
-# set the include directories
-INC_DIRS = . $(EZGL_DIR) $(EZGL_DIR)/..
-
-# compiler flags
-CXX_FLAGS = -g -Wall -std=c++14 -fopenmp
-
-ifeq (release, $(CONF))
-	CXX_FLAGS += -O3
-else ifeq (debug, $(CONF))
-# Don't change anything
+# common flags
+CXXFLAGS := -Wall -std=c++14 -pthread
+ifeq (release,$(CONF))
+  CXXFLAGS += -O3 -DNDEBUG
+else ifeq (debug,$(CONF))
+  CXXFLAGS += -g
 else
-    $(error Invalid value for CONF: '$(CONF)', must be 'release' or 'debug')
+  $(error Invalid CONF: '$(CONF)'; use 'debug' or 'release')
 endif
 
-# 'make all' target
+# default
 all: $(TARGET_DIR)/$(TARGET)
 
-# create the exe
-$(TARGET_DIR)/$(TARGET) : Makefile.parallel $(SRCS)
-	$(ECHO) $(CXX) $(CXX_FLAGS) $(foreach D,$(INC_DIRS),-I$D) $(GTK_INCLUDE_DIRS) $(SRCS) $(GTK_LIBS) -o $(TARGET_DIR)/$(TARGET)
+# build
+$(TARGET_DIR)/$(TARGET): Makefile $(ROUTER_SRC) $(EZGL_SRCS)
+	$(ECHO) $(CXX) $(CXXFLAGS) \
+	  $(foreach D,$(INC_DIRS),-I$D) $(GTK_CFLAGS) \
+	  $(ROUTER_SRC) $(EZGL_SRCS) \
+	  $(GTK_LIBS) -o $@
 
-# clean the EXE 
+# run helpers
+run: $(TARGET)
+	./$(TARGET) -f $(FILE) -a $(ARCH) $(ARGS)
+
+# sweep W (example: make sweep FILE=cct2.txt ARCH=topbottom)
+sweep: $(TARGET)
+	@for W in $$(seq 2 16); do \
+	  echo "=== W=$$W ==="; \
+	  ./$(TARGET) -f $(FILE) -a $(ARCH) -w $$W | grep -E "Routed|Used segments|failed" || true; \
+	done
+
+# quick tests
+test1: $(TARGET)
+	@echo "cct1, distributed, 4 threads"
+	$(ECHO) ./$(TARGET) -f cct1.txt -a distributed -t 4
+
+test1_single: $(TARGET)
+	@echo "cct1, distributed, 1 thread"
+	$(ECHO) ./$(TARGET) -f cct1.txt -a distributed -t 1
+
 clean:
 	$(ECHO) rm -f $(TARGET_DIR)/$(TARGET)
 
-# Test targets
-test1:
-	@echo "Testing parallel router with cct1.txt (distributed, 4 threads)..."
-	$(ECHO) ./$(TARGET) -f cct1.txt -a distributed -t 4
-
-test1_single:
-	@echo "Testing parallel router with cct1.txt (distributed, 1 thread)..."
-	$(ECHO) ./$(TARGET) -f cct1.txt -a distributed -t 1
-
-benchmark:
-	@echo "Benchmarking thread scaling on cct4.txt..."
-	@echo "1 thread:"
-	@./$(TARGET) -f cct4.txt -a distributed -t 1 | grep "Routing time"
-	@echo "2 threads:"
-	@./$(TARGET) -f cct4.txt -a distributed -t 2 | grep "Routing time"
-	@echo "4 threads:"
-	@./$(TARGET) -f cct4.txt -a distributed -t 4 | grep "Routing time"
-	@echo "8 threads:"
-	@./$(TARGET) -f cct4.txt -a distributed -t 8 | grep "Routing time"
-
-help:
-	@echo "Makefile for parallel FPGA router (OpenMP)"
-	@echo ""
-	@echo "Usage: "
-	@echo '    > make -f Makefile.parallel'
-	@echo "        Builds the parallel router executable: '$(TARGET)'"
-	@echo "    > make -f Makefile.parallel clean"
-	@echo "        Removes the executable"
-	@echo "    > make -f Makefile.parallel test1"
-	@echo "        Run with 4 threads on cct1.txt"
-	@echo "    > make -f Makefile.parallel benchmark"
-	@echo "        Benchmark thread scaling on cct4.txt"
-	@echo ""
-	@echo "Configuration Variables: "
-	@echo "    CONF={release | debug}"
-	@echo "        Currently set to '$(CONF)'."
-
-.PHONY: all clean test1 test1_single benchmark help
+.PHONY: all run sweep test1 test1_single clean
