@@ -17,17 +17,19 @@ bool parse_input_file(const std::string& filename) {
         return false;
     }
     
-    std::cout << "\nParsing input file: " << filename << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "Parsing input file: " << filename << std::endl;
+    std::cout << "========================================" << std::endl;
     
     // Clear any existing data
     blocks.clear();
     nets.clear();
     
-    // Parse moveable blocks
+    // ===== SECTION 1: Parse moveable blocks =====
     std::string line;
     int line_num = 0;
     
-    std::cout << "Reading moveable blocks" << std::endl;
+    std::cout << "\n[Section 1] Reading moveable blocks..." << std::endl;
     
     while (std::getline(file, line)) {
         line_num++;
@@ -39,7 +41,7 @@ bool parse_input_file(const std::string& filename) {
         
         // Check for section separator
         if (blocknum == -1) {
-            std::cout << "End of moveable blocks (line " << line_num << ")" << std::endl;
+            std::cout << "  -> End of moveable blocks (line " << line_num << ")" << std::endl;
             break;
         }
         
@@ -77,8 +79,8 @@ bool parse_input_file(const std::string& filename) {
         blocks[blocknum] = block;
     }
     
-    // Parse fixed blocks
-    std::cout << "Reading fixed I/O blocks" << std::endl;
+    // ===== SECTION 2: Parse fixed blocks =====
+    std::cout << "\n[Section 2] Reading fixed I/O blocks..." << std::endl;
     
     while (std::getline(file, line)) {
         line_num++;
@@ -90,7 +92,7 @@ bool parse_input_file(const std::string& filename) {
         
         // Check for end of section
         if (blocknum == -1) {
-            std::cout << "End of fixed blocks (line " << line_num << ")" << std::endl;
+            std::cout << "  -> End of fixed blocks (line " << line_num << ")" << std::endl;
             break;
         }
         
@@ -115,14 +117,16 @@ bool parse_input_file(const std::string& filename) {
     
     file.close();
     
-    std::cout << "Parsed " << blocks.size() << " blocks and " 
+    std::cout << "\n[SUCCESS] Parsed " << blocks.size() << " blocks and " 
               << nets.size() << " nets" << std::endl;
     
     return true;
 }
 
 void print_circuit_info() {
-    std::cout << "\nCircuit Information" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "       Circuit Information" << std::endl;
+    std::cout << "========================================" << std::endl;
     
     // Count fixed vs moveable and types
     int fixed_count = 0;
@@ -135,7 +139,7 @@ void print_circuit_info() {
         else if (block.type == 1) type1_count++;
     }
     
-    std::cout << "Summary:" << std::endl;
+    std::cout << "\nSummary:" << std::endl;
     std::cout << "  Total blocks:      " << blocks.size() << std::endl;
     std::cout << "    Fixed blocks:    " << fixed_count << std::endl;
     std::cout << "    Moveable blocks: " << (blocks.size() - fixed_count) << std::endl;
@@ -151,4 +155,6 @@ void print_circuit_info() {
     double avg_pins = nets.empty() ? 0.0 : (double)total_pins / nets.size();
     std::cout << "  Avg pins per net:  " << std::fixed << std::setprecision(2) 
               << avg_pins << std::endl;
+    
+    std::cout << "========================================\n" << std::endl;
 }

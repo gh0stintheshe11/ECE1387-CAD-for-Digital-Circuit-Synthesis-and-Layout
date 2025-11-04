@@ -222,8 +222,11 @@ SpreadStats apply_flow_based_spreading(
     double psi_incr,
     int max_iterations
 ) {
-    std::cout << "\nFlow-Based Spreading Algorithm" << std::endl;
-    std::cout << "Mode: " << (mode == SpreadMode::HOMOGENEOUS ? "Homogeneous" : "Heterogeneous") << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "    Flow-Based Spreading Algorithm" << std::endl;
+    std::cout << "========================================" << std::endl;
+    
+    std::cout << "\nMode: " << (mode == SpreadMode::HOMOGENEOUS ? "Homogeneous" : "Heterogeneous") << std::endl;
     std::cout << "Initial ψ: " << psi_init << std::endl;
     std::cout << "ψ increment: " << psi_incr << std::endl;
     std::cout << "Max iterations: " << max_iterations << std::endl;
@@ -256,7 +259,7 @@ SpreadStats apply_flow_based_spreading(
         }
     }
     
-    std::cout << "Initial state:" << std::endl;
+    std::cout << "\nInitial state:" << std::endl;
     std::cout << "  Total moveable cells: " << total_moveable << std::endl;
     std::cout << "  Total bins: " << (GRID_SIZE * GRID_SIZE) << std::endl;
     std::cout << "  Overcapacity bins: " << total_overflow_bins << std::endl;
@@ -268,7 +271,7 @@ SpreadStats apply_flow_based_spreading(
     int iteration = 0;
     bool converged = false;
     
-    std::cout << "Spreading iterations:" << std::endl;
+    std::cout << "\nSpreading iterations:" << std::endl;
     
     while (iteration < max_iterations && !converged) {
         std::cout << "\nIteration " << (iteration + 1) << " (ψ = " << psi << "):" << std::endl;
@@ -322,7 +325,9 @@ SpreadStats apply_flow_based_spreading(
 
 // Part 2ii: Create anchors and pseudo nets
 void create_anchors_and_pseudo_nets(double anchor_weight) {
-    std::cout << "\nCreating Anchors & Pseudo Nets" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "    Creating Anchors & Pseudo Nets" << std::endl;
+    std::cout << "========================================" << std::endl;
     
     // Clear previous anchors
     anchors.clear();
@@ -344,7 +349,7 @@ void create_anchors_and_pseudo_nets(double anchor_weight) {
     int anchor_block_id = max_block_id + 1;
     int pseudo_net_id = max_net_id + 1;
     
-    std::cout << "Creating anchors for moveable cells" << std::endl;
+    std::cout << "\nCreating anchors for moveable cells..." << std::endl;
     std::cout << "Anchor weight: " << anchor_weight << std::endl;
     
     int anchor_count = 0;
@@ -394,21 +399,30 @@ void create_anchors_and_pseudo_nets(double anchor_weight) {
     std::cout << "Created " << anchor_count << " pseudo nets (2-pin each)" << std::endl;
     std::cout << "Total blocks now: " << blocks.size() << std::endl;
     std::cout << "Total nets now: " << nets.size() << std::endl;
-    std::cout << "Anchors created. Weight matrix must be rebuilt." << std::endl;
-    std::cout << "Pseudo net weights will be scaled by " << anchor_weight << std::endl;
+    
+    std::cout << "\n[INFO] Anchors created. Weight matrix must be rebuilt." << std::endl;
+    std::cout << "[INFO] Pseudo net weights will be scaled by " << anchor_weight << std::endl;
+    std::cout << "========================================" << std::endl;
 }
 
 void print_spread_stats(const SpreadStats& stats, SpreadMode mode) {
-    std::cout << "\nSpreading Results Summary" << std::endl;
-    std::cout << "Iterations: " << stats.iterations << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "      Spreading Results Summary" << std::endl;
+    std::cout << "========================================" << std::endl;
+    
+    std::cout << "\nMode: " << (mode == SpreadMode::HOMOGENEOUS ? "Homogeneous" : "Heterogeneous") << std::endl;
+    
+    std::cout << "\nIterations: " << stats.iterations << std::endl;
     std::cout << "Final ψ: " << stats.final_psi << std::endl;
     
-    std::cout << "HPWL:" << std::endl;
+    std::cout << "\nHPWL:" << std::endl;
     std::cout << "  Before spreading: " << stats.hpwl_before << std::endl;
     std::cout << "  After spreading:  " << stats.hpwl_after << std::endl;
     std::cout << "  Change: " << (stats.hpwl_after - stats.hpwl_before) 
               << " (" << std::showpos << ((stats.hpwl_after / stats.hpwl_before - 1.0) * 100.0) 
               << std::noshowpos << "%)" << std::endl;
     
-    std::cout << "Total Cell Displacement: " << stats.total_displacement << std::endl;
+    std::cout << "\nTotal Cell Displacement: " << stats.total_displacement << std::endl;
+    
+    std::cout << "========================================\n" << std::endl;
 }

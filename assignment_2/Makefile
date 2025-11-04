@@ -51,7 +51,20 @@ ALL_SRCS = $(SRCS) $(EZGL_SRCS)
 OBJS = $(ALL_SRCS:.cpp=.o)
 
 # Default target
-all: $(TARGET)
+all: build-suitesparse $(TARGET)
+
+# Build SuiteSparse libraries (always)
+build-suitesparse:
+	@echo "========================================"
+	@echo "Building SuiteSparse libraries..."
+	@echo "========================================"
+	@cd $(SUITESPARSE_ROOT) && $(MAKE) clean
+	@cd $(SUITESPARSE_ROOT)/SuiteSparse_config && $(MAKE)
+	@cd $(SUITESPARSE_ROOT)/AMD && $(MAKE) library
+	@cd $(SUITESPARSE_ROOT)/UMFPACK && $(MAKE) library
+	@echo "========================================"
+	@echo "SuiteSparse build complete!"
+	@echo "========================================"
 
 # Link
 $(TARGET): $(OBJS)
@@ -74,5 +87,11 @@ graphics.o: graphics.cpp graphics.h data_structures.h
 clean:
 	rm -f $(OBJS) $(TARGET)
 
+# Clean everything including SuiteSparse
+distclean: clean
+	@echo "Cleaning SuiteSparse..."
+	@cd $(SUITESPARSE_ROOT) && $(MAKE) clean
+	@echo "All clean!"
+
 # Phony targets
-.PHONY: all clean
+.PHONY: all clean distclean build-suitesparse

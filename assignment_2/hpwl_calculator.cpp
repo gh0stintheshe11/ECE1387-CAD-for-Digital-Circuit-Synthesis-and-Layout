@@ -43,7 +43,9 @@ double calculate_hpwl() {
 }
 
 void print_hpwl_stats() {
-    std::cout << "\nHPWL (Wirelength) Analysis" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "      HPWL (Wirelength) Analysis" << std::endl;
+    std::cout << "========================================" << std::endl;
     
     double total_hpwl = 0.0;
     int num_nets_counted = 0;
@@ -111,7 +113,7 @@ void print_hpwl_stats() {
     std::cout << "Max net HPWL:      " << max_net_hpwl << std::endl;
     
     // Print worst 5 nets (highest HPWL)
-    std::cout << "Top 5 Longest Nets:" << std::endl;
+    std::cout << "\n=== Top 5 Longest Nets ===" << std::endl;
     
     // Create vector of (net_id, hpwl) pairs
     std::vector<std::pair<int, double>> net_hpwl_pairs;
@@ -149,4 +151,6 @@ void print_hpwl_stats() {
                   << " (" << std::setw(2) << num_pins << " pins): HPWL = " 
                   << std::setw(8) << hpwl << std::endl;
     }
+    
+    std::cout << "========================================\n" << std::endl;
 }

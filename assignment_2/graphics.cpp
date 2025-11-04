@@ -9,7 +9,9 @@
 void draw_main_canvas(ezgl::renderer *g);
 
 void run_graphics() {
-    std::cout << "\nOpening Graphics Window" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "       Opening Graphics Window" << std::endl;
+    std::cout << "========================================" << std::endl;
     
     // Calculate world bounds from block positions
     double min_x = 1e9, max_x = -1e9;
@@ -48,6 +50,7 @@ void run_graphics() {
     application.add_canvas("MainCanvas", draw_main_canvas, initial_world);
     
     std::cout << "Graphics window opened. Click 'Proceed' to continue." << std::endl;
+    std::cout << "========================================\n" << std::endl;
     
     // Run the GUI (blocking call)
     application.run(nullptr, nullptr, nullptr, nullptr);

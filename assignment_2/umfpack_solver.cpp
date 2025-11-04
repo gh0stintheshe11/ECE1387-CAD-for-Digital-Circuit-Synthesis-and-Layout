@@ -11,7 +11,9 @@ bool solve_placement(
     const std::vector<double>& b_x,
     const std::vector<double>& b_y
 ) {
-    std::cout << "\nSolving Placement with UMFPACK" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "    Solving Placement with UMFPACK" << std::endl;
+    std::cout << "========================================" << std::endl;
     
     int n = Q.n;
     
@@ -40,8 +42,8 @@ bool solve_placement(
     // Set default control parameters
     umfpack_di_defaults(Control);
     
-    // Symbolic factorization
-    std::cout << "Symbolic factorization..." << std::endl;
+    // ===== STEP 1: Symbolic factorization =====
+    std::cout << "\n[Step 1/4] Symbolic factorization..." << std::endl;
     
     int status = umfpack_di_symbolic(
         n, n,           // Matrix dimensions
@@ -57,10 +59,10 @@ bool solve_placement(
         return false;
     }
     
-    std::cout << "Symbolic factorization successful" << std::endl;
+    std::cout << "  -> Symbolic factorization successful" << std::endl;
     
-    // Numeric factorization
-    std::cout << "Numeric factorization" << std::endl;
+    // ===== STEP 2: Numeric factorization =====
+    std::cout << "\n[Step 2/4] Numeric factorization..." << std::endl;
     
     status = umfpack_di_numeric(
         Q.Ap, Q.Ai, Q.Ax,  // Matrix in compressed column format
@@ -77,10 +79,10 @@ bool solve_placement(
         return false;
     }
     
-    std::cout << "Numeric factorization successful" << std::endl;
+    std::cout << "  -> Numeric factorization successful" << std::endl;
     
-    // Solve for X coordinates
-    std::cout << "Solving for X coordinates" << std::endl;
+    // ===== STEP 3: Solve for X coordinates =====
+    std::cout << "\n[Step 3/4] Solving for X coordinates..." << std::endl;
     
     status = umfpack_di_solve(
         UMFPACK_A,         // Solve Ax=b (not A'x=b)
@@ -100,10 +102,10 @@ bool solve_placement(
         return false;
     }
     
-    std::cout << "X coordinates solved" << std::endl;
+    std::cout << "  -> X coordinates solved" << std::endl;
     
-    // Solve for Y coordinates
-    std::cout << "Solving for Y coordinates" << std::endl;
+    // ===== STEP 4: Solve for Y coordinates =====
+    std::cout << "\n[Step 4/4] Solving for Y coordinates..." << std::endl;
     
     status = umfpack_di_solve(
         UMFPACK_A,         // Solve Ay=b
@@ -123,10 +125,10 @@ bool solve_placement(
         return false;
     }
     
-    std::cout << "Y coordinates solved" << std::endl;
+    std::cout << "  -> Y coordinates solved" << std::endl;
     
-    // Update block positions
-    std::cout << "Updating block positions" << std::endl;
+    // ===== STEP 5: Update block positions =====
+    std::cout << "\n[Step 5/4] Updating block positions..." << std::endl;
     
     // Create mapping from matrix index to block ID
     std::vector<int> index_to_block;
@@ -157,14 +159,14 @@ bool solve_placement(
         if (y_pos[i] > max_y) max_y = y_pos[i];
     }
     
-    std::cout << "Positions updated" << std::endl;
-    std::cout << "Placement bounds:" << std::endl;
+    std::cout << "  -> Positions updated" << std::endl;
+    std::cout << "\nPlacement bounds:" << std::endl;
     std::cout << "  X: [" << std::fixed << std::setprecision(2) 
               << min_x << ", " << max_x << "]" << std::endl;
     std::cout << "  Y: [" << min_y << ", " << max_y << "]" << std::endl;
     
     // Print first few positions for debugging
-    std::cout << "First 5 block positions:" << std::endl;
+    std::cout << "\nFirst 5 block positions:" << std::endl;
     for (int i = 0; i < std::min(5, n); i++) {
         int block_id = index_to_block[i];
         std::cout << "  Block " << std::setw(3) << block_id 
@@ -179,7 +181,8 @@ bool solve_placement(
     delete[] x_pos;
     delete[] y_pos;
     
-    std::cout << "Placement solved successfully" << std::endl;
+    std::cout << "\n[SUCCESS] Placement solved!" << std::endl;
+    std::cout << "========================================\n" << std::endl;
     
     return true;
 }

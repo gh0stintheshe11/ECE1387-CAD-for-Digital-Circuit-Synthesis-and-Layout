@@ -21,7 +21,9 @@ bool build_placement_system(
     std::vector<double>& b_x,
     std::vector<double>& b_y
 ) {
-    std::cout << "\nBuilding Placement System (Qx = b)" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "  Building Placement System (Qx = b)" << std::endl;
+    std::cout << "========================================" << std::endl;
     
     // Step 1: Create mapping from block ID to matrix index
     // Only moveable blocks get an index (0 to n-1)
@@ -39,7 +41,7 @@ bool build_placement_system(
     }
     
     int n = index;  // Number of moveable blocks
-    std::cout << "Moveable blocks: " << n << std::endl;
+    std::cout << "\nMoveable blocks: " << n << std::endl;
     
     if (n == 0) {
         std::cerr << "Error: No moveable blocks found!" << std::endl;
@@ -54,7 +56,7 @@ bool build_placement_system(
     // We'll store (row, col, value) triplets, then convert to compressed column
     std::map<std::pair<int,int>, double> Q_coo;  // (row, col) -> value
     
-    std::cout << "Processing nets with clique model" << std::endl;
+    std::cout << "\nProcessing nets with clique model..." << std::endl;
     int nets_processed = 0;
     
     // Step 3: Process each net
@@ -121,8 +123,8 @@ bool build_placement_system(
         nets_processed++;
     }
     
-    std::cout << "Processed " << nets_processed << " nets" << std::endl;
-    std::cout << "Non-zero entries in Q: " << Q_coo.size() << std::endl;
+    std::cout << "  Processed " << nets_processed << " nets" << std::endl;
+    std::cout << "  Non-zero entries in Q: " << Q_coo.size() << std::endl;
     
     // Step 4: Convert COO to compressed column format
     Q.n = n;
@@ -163,10 +165,10 @@ bool build_placement_system(
         Q.Ap[current_col] = entry_idx;
     }
     
-    std::cout << "Placement system built successfully" << std::endl;
-    std::cout << "Matrix size: " << n << " x " << n << std::endl;
-    std::cout << "Non-zeros: " << Q.nz << std::endl;
-    std::cout << "Sparsity: " << std::fixed << std::setprecision(2) 
+    std::cout << "\n[SUCCESS] Placement system built" << std::endl;
+    std::cout << "  Matrix size: " << n << " x " << n << std::endl;
+    std::cout << "  Non-zeros: " << Q.nz << std::endl;
+    std::cout << "  Sparsity: " << std::fixed << std::setprecision(2) 
               << (100.0 * Q.nz / (n * n)) << "%" << std::endl;
     
     return true;
@@ -185,7 +187,9 @@ void free_sparse_matrix(SparseMatrix& mat) {
 }
 
 void print_matrix_info(const SparseMatrix& mat) {
-    std::cout << "\nSparse Matrix Information" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "      Sparse Matrix Information" << std::endl;
+    std::cout << "========================================" << std::endl;
     std::cout << "Dimension: " << mat.n << " x " << mat.n << std::endl;
     std::cout << "Non-zeros: " << mat.nz << std::endl;
     std::cout << "Sparsity:  " << std::fixed << std::setprecision(2)
@@ -209,4 +213,6 @@ void print_matrix_info(const SparseMatrix& mat) {
     if (mat.nz > 10) {
         std::cout << "  ... (" << (mat.nz - 10) << " more entries)" << std::endl;
     }
+    
+    std::cout << "========================================\n" << std::endl;
 }

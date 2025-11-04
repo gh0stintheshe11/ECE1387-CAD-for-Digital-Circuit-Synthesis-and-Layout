@@ -139,21 +139,28 @@ int main(int argc, char* argv[]) {
     }
     
     // Step 4: Calculate and print HPWL (Part 1)
-    std::cout << "\nPart 1: Analytical Placement" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "     Part 1: Analytical Placement" << std::endl;
+    std::cout << "========================================" << std::endl;
     print_hpwl_stats();
     
     // Step 5: Apply spreading if requested (Part 2i)
     SpreadStats stats;
     if (enable_spreading) {
-        std::cout << "\nPart 2: Flow-Based Spreading" << std::endl;
+        std::cout << "\n========================================" << std::endl;
+        std::cout << "     Part 2: Flow-Based Spreading" << std::endl;
+        std::cout << "========================================" << std::endl;
         
         stats = apply_flow_based_spreading(spread_mode, psi_init, psi_incr);
         print_spread_stats(stats, spread_mode);
         
         // Step 6: Apply anchoring if requested (Part 2ii)
         if (anchor_weight > 0) {
-            std::cout << "\nPart 2ii: Anchoring & Re-solve" << std::endl;
-            std::cout << "Anchor weight: " << anchor_weight << std::endl;
+            std::cout << "\n========================================" << std::endl;
+            std::cout << "     Part 2ii: Anchoring & Re-solve" << std::endl;
+            std::cout << "========================================" << std::endl;
+            
+            std::cout << "\nAnchor weight: " << anchor_weight << std::endl;
             
             // Save HPWL after spreading (before anchoring)
             double hpwl_after_spread = calculate_hpwl();
@@ -162,7 +169,7 @@ int main(int argc, char* argv[]) {
             create_anchors_and_pseudo_nets(anchor_weight);
             
             // Rebuild weight matrix (now includes pseudo nets)
-            std::cout << "Rebuilding placement system with anchors..." << std::endl;
+            std::cout << "\nRebuilding placement system with anchors..." << std::endl;
             SparseMatrix Q2;
             std::vector<double> b_x2, b_y2;
             if (!build_placement_system(Q2, b_x2, b_y2)) {
@@ -183,8 +190,10 @@ int main(int argc, char* argv[]) {
             // Calculate final HPWL
             double hpwl_after_anchor = calculate_hpwl();
             
-            std::cout << "\nHPWL Results (Part 2ii)" << std::endl;
-            std::cout << "After analytical placement: " << stats.hpwl_before << std::endl;
+            std::cout << "\n========================================" << std::endl;
+            std::cout << "    HPWL Results (Part 2ii)" << std::endl;
+            std::cout << "========================================" << std::endl;
+            std::cout << "\nAfter analytical placement: " << stats.hpwl_before << std::endl;
             std::cout << "After spreading:            " << hpwl_after_spread << std::endl;
             std::cout << "After anchoring & re-solve: " << hpwl_after_anchor << std::endl;
             
@@ -192,12 +201,14 @@ int main(int argc, char* argv[]) {
             double change_anchor = hpwl_after_anchor - hpwl_after_spread;
             double change_total = hpwl_after_anchor - stats.hpwl_before;
             
-            std::cout << "Change from spreading:      " << std::showpos << change_spread 
+            std::cout << "\nChange from spreading:      " << std::showpos << change_spread 
                       << " (" << (change_spread / stats.hpwl_before * 100.0) << "%)" << std::noshowpos << std::endl;
             std::cout << "Change from anchoring:      " << std::showpos << change_anchor 
                       << " (" << (change_anchor / hpwl_after_spread * 100.0) << "%)" << std::noshowpos << std::endl;
             std::cout << "Total change:               " << std::showpos << change_total 
                       << " (" << (change_total / stats.hpwl_before * 100.0) << "%)" << std::noshowpos << std::endl;
+            
+            std::cout << "========================================\n" << std::endl;
             
             free_sparse_matrix(Q2);
         }
@@ -211,7 +222,9 @@ int main(int argc, char* argv[]) {
         run_graphics();  // This is a blocking calls
     }
     
-    std::cout << "\nCompletion Status" << std::endl;
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "         Completion Status" << std::endl;
+    std::cout << "========================================" << std::endl;
     std::cout << "  [✓] Parse input file" << std::endl;
     std::cout << "  [✓] Build weight matrix (clique model)" << std::endl;
     std::cout << "  [✓] Solve linear system with UMFPACK" << std::endl;
@@ -223,8 +236,9 @@ int main(int argc, char* argv[]) {
         std::cout << "  [✓] Apply anchoring & re-solve" << std::endl;
     }
     std::cout << "  [✓] Display with EZGL graphics" << std::endl;
+    std::cout << "========================================\n" << std::endl;
     
-    std::cout << "Placement complete!" << std::endl;
+    std::cout << "[SUCCESS] Placement complete!" << std::endl;
     
     return 0;
 }
