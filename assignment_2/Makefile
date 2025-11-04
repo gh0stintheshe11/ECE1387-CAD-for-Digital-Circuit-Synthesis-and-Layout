@@ -22,7 +22,7 @@ INCLUDES = -I$(UMFPACK_INC) -I$(AMD_INC) -I$(SUITESPARSE_CONFIG) $(EZ_INC) $(GTK
 LDFLAGS = -L$(UMFPACK_LIB) -L$(AMD_LIB) -L$(SUITESPARSE_CONFIG)
 
 # Libraries to link
-LIBS = -lumfpack -lamd -lsuitesparseconfig -lm $(GTK_LIBS)
+LIBS = -lumfpack -lamd -lsuitesparseconfig -lm $(GTK_LIBS) -lX11
 
 # Target executable
 TARGET = placer
