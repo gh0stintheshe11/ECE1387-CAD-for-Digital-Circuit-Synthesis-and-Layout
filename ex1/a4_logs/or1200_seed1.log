@@ -1,0 +1,766 @@
+VPR FPGA Placement and Routing.
+Version: 9.0.0-dev+v8.0.0-11943-g8cb20aa52-dirty
+Revision: v8.0.0-11943-g8cb20aa52-dirty
+Compiled: 2025-11-07T01:13:29
+Compiler: GNU 13.3.0 on Linux-6.6.87.2-microsoft-standard-WSL2 x86_64
+Build Info: release IPO VTR_ASSERT_LEVEL=2
+
+University of Toronto
+verilogtorouting.org
+vtr-users@googlegroups.com
+This is free open source code under MIT license.
+
+Warning 1: To use RLPlace for WLdriven placements, the reward function should be basic or nonPenalizing_basic.
+you can specify the reward function using --place_reward_fun.
+Setting the placement reward function to "basic"
+VPR was run with the following command-line:
+./vtr-verilog-to-routing/vpr/vpr k6_N10_mem32K_40nm.xml or1200.blif --pack --place --place_algorithm bounding_box --seed 1
+
+
+Architecture file: k6_N10_mem32K_40nm.xml
+Circuit name: or1200
+
+# Loading Architecture Description
+# Loading Architecture Description took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+
+Timing analysis: ON
+Circuit netlist file: or1200.net
+Circuit placement file: or1200.place
+Circuit routing file: or1200.route
+Circuit SDC file: or1200.sdc
+Vpr floorplanning constraints file: not specified
+
+Packer: ENABLED
+Placer: ENABLED
+Analytical Placer: DISABLED
+Router: DISABLED
+Analysis: DISABLED
+
+VPR was run with the following options:
+
+NetlistOpts.absorb_buffer_luts            : true
+NetlistOpts.sweep_dangling_primary_ios    : true
+NetlistOpts.sweep_dangling_nets           : true
+NetlistOpts.sweep_dangling_blocks         : true
+NetlistOpts.sweep_constant_primary_outputs: false
+NetlistOpts.netlist_verbosity             : 1
+NetlistOpts.const_gen_inference           : COMB_SEQ
+
+PackerOpts.allow_unrelated_clustering: auto
+PackerOpts.alpha_clustering: 0.750000
+PackerOpts.beta_clustering: 0.900000
+PackerOpts.cluster_seed_type: BLEND2
+PackerOpts.connection_driven: true
+PackerOpts.global_clocks: true
+PackerOpts.inter_cluster_net_delay: 1.000000
+PackerOpts.timing_driven: true
+PackerOpts.target_external_pin_util: auto
+
+PlacerOpts.place_freq: PLACE_ONCE
+PlacerOpts.place_algorithm: BOUNDING_BOX_PLACE
+PlacerOpts.pad_loc_type: FREE
+PlacerOpts.constraints_file: No constraints file given
+PlacerOpts.place_chan_width: 100
+PlacerOpts.rlim_escape_fraction: 0.000000
+PlacerOpts.move_stats_file: 
+PlacerOpts.placement_saves_per_temperature: 0
+PlacerOpts.effort_scaling: CIRCUIT
+PlacerOpts.place_delta_delay_matrix_calculation_method: ASTAR_ROUTE
+PlaceOpts.seed: 1
+AnnealSched.type: AUTO_SCHED
+AnnealSched.inner_num: 0.500000
+
+# Building complex block graph
+Warning 2: io[0].clock[0] unconnected pin in architecture.
+# Building complex block graph took 0.01 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+Circuit file: or1200.blif
+# Load circuit
+Found constant-one generator 'top^icpu_sel_o~0'
+Found constant-one generator 'top^icpu_sel_o~1'
+Found constant-one generator 'top^icpu_sel_o~2'
+Found constant-one generator 'top^icpu_sel_o~3'
+Found constant-one generator 'top^icpu_tag_o~0'
+Found constant-zero generator 'top^icpu_tag_o~1'
+Found constant-zero generator 'top^icpu_tag_o~2'
+Found constant-zero generator 'top^icpu_tag_o~3'
+Found constant-zero generator 'top^du_except~2'
+Found constant-zero generator 'top^dcpu_tag_o~1'
+Found constant-zero generator 'top^dcpu_tag_o~2'
+Found constant-zero generator 'top^dcpu_tag_o~3'
+Found constant-zero generator 'unconn'
+Found constant-zero generator 'gnd'
+# Load circuit took 0.03 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+# Clean circuit
+Absorbed 81 LUT buffers
+Inferred    0 additional primitive pins as constant generators since they have no combinationally connected inputs
+Inferred    0 additional primitive pins as constant generators due to constant inputs
+Inferred    0 additional primitive pins as constant generators since they have no combinationally connected inputs
+Inferred    0 additional primitive pins as constant generators due to constant inputs
+Inferred    0 additional primitive pins as constant generators since they have no combinationally connected inputs
+Inferred    0 additional primitive pins as constant generators due to constant inputs
+Swept input(s)      : 3
+Swept output(s)     : 0 (0 dangling, 0 constant)
+Swept net(s)        : 75
+Swept block(s)      : 0
+Constant Pins Marked: 0
+# Clean circuit took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+# Compress circuit
+# Compress circuit took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+# Verify circuit
+# Verify circuit took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+Circuit Statistics:
+  Blocks: 4589
+    .input       :     385
+    .latch       :     691
+    .names       :    3054
+        0-LUT:      13
+        2-LUT:     157
+        3-LUT:     556
+        4-LUT:     405
+        5-LUT:     656
+        6-LUT:    1267
+    .output      :     394
+    dual_port_ram:      64
+    multiply     :       1
+  Nets  : 4258
+    Avg Fanout:     4.1
+    Max Fanout:   755.0
+    Min Fanout:     1.0
+  Netlist Clocks: 1
+# Build Timing Graph
+  Timing Graph Nodes: 21542
+  Timing Graph Edges: 38206
+  Timing Graph Levels: 58
+# Build Timing Graph took 0.01 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+Netlist contains 1 clocks
+  Netlist Clock 'top^clk' Fanout: 755 pins (3.5%), 755 blocks (16.5%)
+# Load Timing Constraints
+
+SDC file 'or1200.sdc' not found
+Setting default timing constraints:
+   * constrain all primay inputs and primary outputs on netlist clock 'top^clk'
+   * optimize netlist clock to run as fast as possible
+Timing constraints created 1 clocks
+  Constrained Clock 'top^clk' Source: 'top^clk.inpad[0]'
+
+# Load Timing Constraints took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+# Packing
+Begin packing 'or1200.blif'.
+
+After removing unused inputs...
+	total blocks: 4589, total nets: 4258, total inputs: 385, total outputs: 394
+Begin prepacking.
+0 attraction groups were created during prepacking.
+Finish prepacking.
+Using inter-cluster delay: 1.33777e-09
+Packing with pin utilization targets: io:1,1 clb:0.8,0.6 mult_36:1,1 memory:1,1
+Packing with high fanout thresholds: io:128 clb:32 mult_36:128 memory:128
+Starting Clustering - Clustering Progress: 
+-------------------   --------------------------   ---------
+Molecules processed   Number of clusters created   FPGA size
+-------------------   --------------------------   ---------
+   162/3898      4%                           13    12 x 12    
+   321/3898      8%                           29    12 x 12    
+   481/3898     12%                           45    12 x 12    
+   637/3898     16%                           61    12 x 12    
+   794/3898     20%                           77    13 x 13    
+   957/3898     24%                           94    14 x 14    
+  1112/3898     28%                          110    14 x 14    
+  1274/3898     32%                          127    15 x 15    
+  1432/3898     36%                          143    16 x 16    
+  1587/3898     40%                          159    17 x 17    
+  1744/3898     44%                          176    18 x 18    
+  1906/3898     48%                          195    18 x 18    
+  2061/3898     52%                          212    19 x 19    
+  2222/3898     57%                          230    20 x 20    
+  2382/3898     61%                          250    21 x 21    
+  2540/3898     65%                          269    21 x 21    
+  2698/3898     69%                          294    22 x 22    
+  2853/3898     73%                          326    23 x 23    
+  3012/3898     77%                          354    23 x 23    
+  3167/3898     81%                          416    24 x 24    
+  3322/3898     85%                          571    25 x 25    
+  3477/3898     89%                          726    25 x 25    
+  3632/3898     93%                          881    25 x 25    
+  3787/3898     97%                         1036    25 x 25    
+  3898/3898    100%                         1147    27 x 27    
+
+Logic Element (fle) detailed count:
+  Total number of Logic Elements used : 3054
+  LEs used for logic and registers    : 691
+  LEs used for logic only             : 2363
+  LEs used for registers only         : 0
+
+Incr Slack updates 1 in 0.000250531 sec
+Full Max Req/Worst Slack updates 1 in 1.9165e-05 sec
+Incr Max Req/Worst Slack updates 0 in 0 sec
+Incr Criticality updates 0 in 0 sec
+Full Criticality updates 1 in 0.000268964 sec
+FPGA sized to 27 x 27 (auto)
+Device Utilization: 0.66 (target 1.00)
+	Block Utilization: 0.97 Type: io
+	Block Utilization: 0.77 Type: clb
+	Block Utilization: 0.06 Type: mult_36
+	Block Utilization: 0.17 Type: memory
+
+Start the iterative improvement process
+the iterative improvement process is done
+Final Clustering Statistics: 
+----------   --------   ------------------------------------   --------------------------
+Block Type   # Blocks   Avg. # of input clocks and pins used   Avg. # of output pins used
+----------   --------   ------------------------------------   --------------------------
+     EMPTY          0                                      0                            0   
+        io        779                               0.505777                     0.494223   
+       clb        365                                21.9452                      5.07397   
+   mult_36          1                                     64                           64   
+    memory          2                                     77                           32   
+Absorbed logical nets 1893 out of 4258 nets, 2365 nets not absorbed.
+
+Netlist conversion complete.
+
+# Packing took 0.70 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+# Load packing
+Begin loading packed FPGA netlist file.
+Netlist generated from file 'or1200.net'.
+Detected 13 constant generators (to see names run with higher pack verbosity)
+Finished loading packed FPGA netlist file (took 0.153209 seconds).
+Warning 3: Treated 13 constant nets as global which will not be routed (to see net names increase packer verbosity).
+Warning 4: Netlist contains 79 global net to non-global architecture pin connections
+Warning 5: Logic block #440 (top^icpu_sel_o~0) has only 1 output pin 'top^icpu_sel_o~0.O[9]'. It may be a constant generator.
+Warning 6: Logic block #441 (top^icpu_sel_o~1) has only 1 output pin 'top^icpu_sel_o~1.O[9]'. It may be a constant generator.
+Warning 7: Logic block #442 (top^icpu_sel_o~2) has only 1 output pin 'top^icpu_sel_o~2.O[9]'. It may be a constant generator.
+Warning 8: Logic block #443 (top^icpu_sel_o~3) has only 1 output pin 'top^icpu_sel_o~3.O[9]'. It may be a constant generator.
+Warning 9: Logic block #444 (top^icpu_tag_o~0) has only 1 output pin 'top^icpu_tag_o~0.O[9]'. It may be a constant generator.
+Warning 10: Logic block #445 (top^icpu_tag_o~1) has only 1 output pin 'top^icpu_tag_o~1.O[9]'. It may be a constant generator.
+Warning 11: Logic block #446 (top^icpu_tag_o~2) has only 1 output pin 'top^icpu_tag_o~2.O[9]'. It may be a constant generator.
+Warning 12: Logic block #447 (top^icpu_tag_o~3) has only 1 output pin 'top^icpu_tag_o~3.O[9]'. It may be a constant generator.
+Warning 13: Logic block #448 (top^du_except~2) has only 1 output pin 'top^du_except~2.O[9]'. It may be a constant generator.
+Warning 14: Logic block #449 (top^dcpu_tag_o~1) has only 1 output pin 'top^dcpu_tag_o~1.O[9]'. It may be a constant generator.
+Warning 15: Logic block #450 (top^dcpu_tag_o~2) has only 1 output pin 'top^dcpu_tag_o~2.O[9]'. It may be a constant generator.
+Warning 16: Logic block #451 (top^dcpu_tag_o~3) has only 1 output pin 'top^dcpu_tag_o~3.O[9]'. It may be a constant generator.
+Warning 17: Logic block #452 (gnd) has only 1 output pin 'gnd.O[9]'. It may be a constant generator.
+Completed clustering consistency check successfully.
+Cluster level netlist and block usage statistics
+Netlist num_nets: 2365
+Netlist num_blocks: 1147
+Netlist EMPTY blocks: 0.
+Netlist io blocks: 779.
+Netlist clb blocks: 365.
+Netlist mult_36 blocks: 1.
+Netlist memory blocks: 2.
+Netlist inputs pins: 385
+Netlist output pins: 394
+
+Pb types usage...
+  io                   : 779
+   inpad               : 385
+   outpad              : 394
+  clb                  : 365
+   fle                 : 3054
+    ble6               : 3054
+     lut6              : 3054
+      lut              : 3054
+     ff                : 691
+  mult_36              : 1
+   mult_36x36_slice    : 1
+    mult_36x36         : 1
+  memory               : 2
+   mem_1024x32_dp      : 2
+    memory_slice       : 64
+
+# Load packing took 0.24 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+# Create Device
+## Build Device Grid
+FPGA sized to 27 x 27: 729 grid tiles (auto)
+
+Resource usage...
+	Netlist
+		779	blocks of type: io
+	Architecture
+		800	blocks of type: io
+	Netlist
+		365	blocks of type: clb
+	Architecture
+		475	blocks of type: clb
+	Netlist
+		1	blocks of type: mult_36
+	Architecture
+		18	blocks of type: mult_36
+	Netlist
+		2	blocks of type: memory
+	Architecture
+		12	blocks of type: memory
+
+Device Utilization: 0.66 (target 1.00)
+	Physical Tile io:
+	Block Utilization: 0.97 Logical Block: io
+	Physical Tile clb:
+	Block Utilization: 0.77 Logical Block: clb
+	Physical Tile mult_36:
+	Block Utilization: 0.06 Logical Block: mult_36
+	Physical Tile memory:
+	Block Utilization: 0.17 Logical Block: memory
+
+FPGA size limited by block type(s): io
+
+## Build Device Grid took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+## Build routing resource graph
+## Build routing resource graph took 0.26 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+  RR Graph Nodes: 75898
+  RR Graph Edges: 693657
+# Create Device took 0.27 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+
+
+Bounding box mode is Cube
+
+# Compressed grid construction
+# Compressed grid construction took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+# Placement
+## Initial Placement
+Initial placement iteration 0 has finished successfully
+## Initial Placement took 0.00 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+Using simple RL 'Softmax agent' for choosing move and block types
+
+BB estimate of min-dist (placement) wire length: 70692
+
+Completed placement consistency check successfully.
+Initial placement cost: 1 bb_cost: 706.919 td_cost: nan
+Placement contains 0 placement macros involving 0 blocks (average macro size -nan)
+
+Moves per temperature: 6001
+Warning 18: Starting t: 475 of 1147 configurations accepted.
+
+---- ------ ------- ------- ---------- ---------- ------- ---------- -------- ------- ------- ------ -------- --------- ------
+Tnum   Time       T Av Cost Av BB Cost Av TD Cost     CPD       sTNS     sWNS Ac Rate Std Dev  R lim Crit Exp Tot Moves  Alpha
+      (sec)                                          (ns)       (ns)     (ns)                                                 
+---- ------ ------- ------- ---------- ---------- ------- ---------- -------- ------- ------- ------ -------- --------- ------
+   1    0.0 4.7e-04   0.958     606.75 nan            nan        nan      nan   0.701  0.0208   26.0     0.00      6001  1.000
+   2    0.0 4.4e-04   0.967     565.69 nan            nan        nan      nan   0.684  0.0151   26.0     0.00     12002  0.950
+   3    0.0 4.2e-04   0.981     543.32 nan            nan        nan      nan   0.672  0.0088   26.0     0.00     18003  0.950
+   4    0.0 4.0e-04   0.980     521.77 nan            nan        nan      nan   0.664  0.0062   26.0     0.00     24004  0.950
+   5    0.0 3.8e-04   0.984     508.87 nan            nan        nan      nan   0.656  0.0100   26.0     0.00     30005  0.950
+   6    0.0 3.6e-04   0.987     497.90 nan            nan        nan      nan   0.660  0.0066   26.0     0.00     36006  0.950
+   7    0.0 3.4e-04   0.989     486.59 nan            nan        nan      nan   0.637  0.0037   26.0     0.00     42007  0.950
+   8    0.0 3.3e-04   0.988     477.27 nan            nan        nan      nan   0.634  0.0047   26.0     0.00     48008  0.950
+   9    0.0 3.1e-04   0.995     473.33 nan            nan        nan      nan   0.610  0.0031   26.0     0.00     54009  0.950
+  10    0.0 2.9e-04   0.993     471.27 nan            nan        nan      nan   0.610  0.0036   26.0     0.00     60010  0.950
+  11    0.0 2.8e-04   0.997     465.98 nan            nan        nan      nan   0.597  0.0052   26.0     0.00     66011  0.950
+  12    0.0 2.7e-04   0.987     457.42 nan            nan        nan      nan   0.584  0.0034   26.0     0.00     72012  0.950
+  13    0.0 2.5e-04   0.983     449.91 nan            nan        nan      nan   0.568  0.0056   26.0     0.00     78013  0.950
+  14    0.0 2.4e-04   0.993     444.11 nan            nan        nan      nan   0.538  0.0032   26.0     0.00     84014  0.950
+  15    0.0 2.3e-04   1.000     442.14 nan            nan        nan      nan   0.521  0.0026   26.0     0.00     90015  0.950
+  16    0.0 2.2e-04   0.997     438.61 nan            nan        nan      nan   0.508  0.0047   26.0     0.00     96016  0.950
+  17    0.0 2.1e-04   0.995     431.02 nan            nan        nan      nan   0.489  0.0029   26.0     0.00    102017  0.950
+  18    0.0 2.0e-04   1.001     428.46 nan            nan        nan      nan   0.470  0.0019   26.0     0.00    108018  0.950
+  19    0.0 1.9e-04   0.997     425.95 nan            nan        nan      nan   0.461  0.0043   26.0     0.00    114019  0.950
+  20    0.0 1.8e-04   0.996     421.04 nan            nan        nan      nan   0.435  0.0049   26.0     0.00    120020  0.950
+  21    0.0 1.7e-04   0.994     414.48 nan            nan        nan      nan   0.419  0.0038   25.9     0.00    126021  0.950
+  22    0.0 1.6e-04   0.996     410.55 nan            nan        nan      nan   0.407  0.0046   25.3     0.00    132022  0.950
+  23    0.0 1.5e-04   1.001     407.00 nan            nan        nan      nan   0.388  0.0022   24.5     0.00    138023  0.950
+  24    0.0 1.4e-04   0.991     401.54 nan            nan        nan      nan   0.370  0.0038   23.2     0.00    144024  0.950
+  25    0.0 1.4e-04   0.999     399.27 nan            nan        nan      nan   0.370  0.0012   21.6     0.00    150025  0.950
+  26    0.0 1.3e-04   0.997     399.01 nan            nan        nan      nan   0.378  0.0022   20.1     0.00    156026  0.950
+  27    0.0 1.2e-04   0.995     395.37 nan            nan        nan      nan   0.359  0.0017   18.9     0.00    162027  0.950
+  28    0.0 1.2e-04   0.996     393.70 nan            nan        nan      nan   0.363  0.0034   17.3     0.00    168028  0.950
+  29    0.0 1.1e-04   0.996     390.03 nan            nan        nan      nan   0.348  0.0033   16.0     0.00    174029  0.950
+  30    0.0 1.1e-04   0.998     386.37 nan            nan        nan      nan   0.332  0.0013   14.5     0.00    180030  0.950
+  31    0.0 1.0e-04   1.001     386.87 nan            nan        nan      nan   0.350  0.0017   13.0     0.00    186031  0.950
+  32    0.0 9.5e-05   0.996     384.06 nan            nan        nan      nan   0.336  0.0014   11.8     0.00    192032  0.950
+  33    0.0 9.1e-05   0.992     381.85 nan            nan        nan      nan   0.336  0.0029   10.6     0.00    198033  0.950
+  34    0.0 8.6e-05   0.997     380.19 nan            nan        nan      nan   0.335  0.0025    9.5     0.00    204034  0.950
+  35    0.0 8.2e-05   0.999     378.96 nan            nan        nan      nan   0.329  0.0004    8.5     0.00    210035  0.950
+  36    0.0 7.8e-05   0.995     377.25 nan            nan        nan      nan   0.319  0.0016    7.5     0.00    216036  0.950
+  37    0.0 7.4e-05   0.999     375.56 nan            nan        nan      nan   0.326  0.0007    6.6     0.00    222037  0.950
+  38    0.0 7.0e-05   0.998     374.29 nan            nan        nan      nan   0.335  0.0019    5.9     0.00    228038  0.950
+  39    0.0 6.7e-05   0.998     372.03 nan            nan        nan      nan   0.315  0.0010    5.2     0.00    234039  0.950
+  40    0.0 6.3e-05   0.999     371.52 nan            nan        nan      nan   0.314  0.0005    4.6     0.00    240040  0.950
+  41    0.0 6.0e-05   0.999     371.24 nan            nan        nan      nan   0.307  0.0012    4.0     0.00    246041  0.950
+  42    0.0 5.7e-05   0.994     368.29 nan            nan        nan      nan   0.415  0.0030    3.5     0.00    252042  0.950
+  43    0.0 5.4e-05   0.998     366.34 nan            nan        nan      nan   0.404  0.0014    3.4     0.00    258043  0.950
+  44    0.0 5.2e-05   0.997     364.06 nan            nan        nan      nan   0.399  0.0015    3.3     0.00    264044  0.950
+  45    0.0 4.9e-05   0.999     362.93 nan            nan        nan      nan   0.380  0.0007    3.1     0.00    270045  0.950
+  46    0.0 4.6e-05   0.996     361.14 nan            nan        nan      nan   0.420  0.0018    2.9     0.00    276046  0.950
+  47    0.0 4.4e-05   0.999     359.89 nan            nan        nan      nan   0.418  0.0013    2.9     0.00    282047  0.950
+  48    0.0 4.2e-05   0.998     357.94 nan            nan        nan      nan   0.405  0.0012    2.8     0.00    288048  0.950
+  49    0.0 4.0e-05   0.998     356.51 nan            nan        nan      nan   0.398  0.0013    2.7     0.00    294049  0.950
+  50    0.0 3.8e-05   0.998     355.13 nan            nan        nan      nan   0.373  0.0006    2.6     0.00    300050  0.950
+  51    0.0 3.6e-05   0.999     354.18 nan            nan        nan      nan   0.374  0.0010    2.4     0.00    306051  0.950
+  52    0.0 3.4e-05   1.000     353.28 nan            nan        nan      nan   0.361  0.0006    2.3     0.00    312052  0.950
+  53    0.0 3.2e-05   0.999     352.62 nan            nan        nan      nan   0.346  0.0006    2.1     0.00    318053  0.950
+  54    0.0 3.1e-05   0.998     351.44 nan            nan        nan      nan   0.362  0.0009    1.9     0.00    324054  0.950
+  55    0.0 2.9e-05   0.999     350.76 nan            nan        nan      nan   0.342  0.0007    1.7     0.00    330055  0.950
+  56    0.0 2.8e-05   1.000     350.14 nan            nan        nan      nan   0.322  0.0005    1.6     0.00    336056  0.950
+  57    0.0 2.6e-05   0.999     349.49 nan            nan        nan      nan   0.324  0.0003    1.4     0.00    342057  0.950
+  58    0.0 2.5e-05   0.999     349.17 nan            nan        nan      nan   0.323  0.0005    1.2     0.00    348058  0.950
+  59    0.0 2.4e-05   0.999     348.85 nan            nan        nan      nan   0.310  0.0003    1.1     0.00    354059  0.950
+  60    0.0 2.3e-05   1.000     348.73 nan            nan        nan      nan   0.314  0.0002    1.0     0.00    360060  0.950
+  61    0.0 2.2e-05   1.000     348.57 nan            nan        nan      nan   0.310  0.0002    1.0     0.00    366061  0.950
+  62    0.0 2.0e-05   1.000     348.35 nan            nan        nan      nan   0.281  0.0004    1.0     0.00    372062  0.950
+  63    0.0 1.9e-05   0.999     347.99 nan            nan        nan      nan   0.294  0.0003    1.0     0.00    378063  0.950
+  64    0.0 1.8e-05   1.000     347.83 nan            nan        nan      nan   0.284  0.0003    1.0     0.00    384064  0.950
+  65    0.0 1.8e-05   0.999     347.59 nan            nan        nan      nan   0.270  0.0005    1.0     0.00    390065  0.950
+  66    0.0 1.7e-05   0.999     347.09 nan            nan        nan      nan   0.272  0.0002    1.0     0.00    396066  0.950
+  67    0.0 1.6e-05   0.999     346.88 nan            nan        nan      nan   0.257  0.0002    1.0     0.00    402067  0.950
+  68    0.0 1.5e-05   1.000     346.76 nan            nan        nan      nan   0.253  0.0001    1.0     0.00    408068  0.950
+  69    0.0 1.4e-05   1.000     346.77 nan            nan        nan      nan   0.250  0.0001    1.0     0.00    414069  0.950
+  70    0.0 1.4e-05   1.000     346.86 nan            nan        nan      nan   0.251  0.0001    1.0     0.00    420070  0.950
+  71    0.0 1.3e-05   1.000     346.78 nan            nan        nan      nan   0.246  0.0001    1.0     0.00    426071  0.950
+  72    0.0 1.2e-05   1.000     346.59 nan            nan        nan      nan   0.233  0.0001    1.0     0.00    432072  0.950
+  73    0.0 1.2e-05   1.000     346.51 nan            nan        nan      nan   0.240  0.0001    1.0     0.00    438073  0.950
+  74    0.0 1.1e-05   1.000     346.40 nan            nan        nan      nan   0.220  0.0001    1.0     0.00    444074  0.950
+  75    0.0 1.1e-05   1.000     346.28 nan            nan        nan      nan   0.232  0.0001    1.0     0.00    450075  0.950
+  76    0.0 1.0e-05   1.000     346.15 nan            nan        nan      nan   0.220  0.0002    1.0     0.00    456076  0.950
+  77    0.0 9.5e-06   1.000     346.06 nan            nan        nan      nan   0.225  0.0002    1.0     0.00    462077  0.950
+  78    0.0 9.0e-06   1.000     345.88 nan            nan        nan      nan   0.220  0.0001    1.0     0.00    468078  0.950
+  79    0.0 8.6e-06   1.000     345.84 nan            nan        nan      nan   0.202  0.0000    1.0     0.00    474079  0.950
+  80    0.0 8.1e-06   1.000     345.78 nan            nan        nan      nan   0.206  0.0001    1.0     0.00    480080  0.950
+  81    0.0 7.7e-06   1.000     345.72 nan            nan        nan      nan   0.213  0.0001    1.0     0.00    486081  0.950
+  82    0.0 7.3e-06   1.000     345.61 nan            nan        nan      nan   0.207  0.0001    1.0     0.00    492082  0.950
+  83    0.0 7.0e-06   1.000     345.57 nan            nan        nan      nan   0.195  0.0001    1.0     0.00    498083  0.950
+  84    0.0 6.6e-06   1.000     345.52 nan            nan        nan      nan   0.187  0.0000    1.0     0.00    504084  0.950
+  85    0.0 6.3e-06   1.000     345.52 nan            nan        nan      nan   0.205  0.0001    1.0     0.00    510085  0.950
+  86    0.0 6.0e-06   1.000     345.46 nan            nan        nan      nan   0.206  0.0000    1.0     0.00    516086  0.950
+  87    0.0 5.7e-06   1.000     345.41 nan            nan        nan      nan   0.186  0.0000    1.0     0.00    522087  0.950
+  88    0.0 5.4e-06   1.000     345.38 nan            nan        nan      nan   0.197  0.0000    1.0     0.00    528088  0.950
+  89    0.0 5.1e-06   1.000     345.40 nan            nan        nan      nan   0.184  0.0000    1.0     0.00    534089  0.950
+  90    0.0 4.9e-06   1.000     345.36 nan            nan        nan      nan   0.193  0.0000    1.0     0.00    540090  0.950
+  91    0.0 4.6e-06   1.000     345.35 nan            nan        nan      nan   0.190  0.0000    1.0     0.00    546091  0.950
+  92    0.0 4.4e-06   1.000     345.34 nan            nan        nan      nan   0.194  0.0000    1.0     0.00    552092  0.950
+  93    0.0 4.2e-06   1.000     345.32 nan            nan        nan      nan   0.193  0.0000    1.0     0.00    558093  0.950
+  94    0.0 4.0e-06   1.000     345.31 nan            nan        nan      nan   0.198  0.0000    1.0     0.00    564094  0.950
+  95    0.0 3.8e-06   1.000     345.25 nan            nan        nan      nan   0.189  0.0001    1.0     0.00    570095  0.950
+  96    0.0 3.6e-06   1.000     345.19 nan            nan        nan      nan   0.191  0.0000    1.0     0.00    576096  0.950
+  97    0.0 3.4e-06   1.000     345.16 nan            nan        nan      nan   0.173  0.0000    1.0     0.00    582097  0.950
+  98    0.0 3.2e-06   1.000     345.15 nan            nan        nan      nan   0.188  0.0000    1.0     0.00    588098  0.950
+  99    0.0 3.1e-06   1.000     345.13 nan            nan        nan      nan   0.182  0.0000    1.0     0.00    594099  0.950
+ 100    0.0 2.9e-06   1.000     345.13 nan            nan        nan      nan   0.183  0.0000    1.0     0.00    600100  0.950
+ 101    0.0 2.8e-06   1.000     345.13 nan            nan        nan      nan   0.186  0.0000    1.0     0.00    606101  0.950
+ 102    0.0 2.6e-06   1.000     345.12 nan            nan        nan      nan   0.184  0.0000    1.0     0.00    612102  0.950
+ 103    0.0 2.5e-06   1.000     345.10 nan            nan        nan      nan   0.177  0.0000    1.0     0.00    618103  0.950
+ 104    0.0 2.4e-06   1.000     345.05 nan            nan        nan      nan   0.184  0.0000    1.0     0.00    624104  0.950
+ 105    0.0 2.3e-06   1.000     345.04 nan            nan        nan      nan   0.184  0.0000    1.0     0.00    630105  0.950
+ 106    0.0 2.1e-06   1.000     345.02 nan            nan        nan      nan   0.176  0.0000    1.0     0.00    636106  0.950
+ 107    0.0 2.0e-04   1.046     360.74 nan            nan        nan      nan   0.526  0.0178    1.0     0.00    642107  0.950
+ 108    0.0 1.9e-04   1.008     372.90 nan            nan        nan      nan   0.569  0.0053    1.1     0.00    648108  0.950
+ 109    0.0 1.8e-04   1.003     375.89 nan            nan        nan      nan   0.573  0.0020    1.2     0.00    654109  0.950
+ 110    0.0 1.7e-04   0.999     377.42 nan            nan        nan      nan   0.575  0.0022    1.4     0.00    660110  0.950
+ 111    0.0 1.7e-04   1.002     378.53 nan            nan        nan      nan   0.571  0.0013    1.6     0.00    666111  0.950
+ 112    0.0 1.6e-04   0.997     377.35 nan            nan        nan      nan   0.570  0.0027    1.8     0.00    672112  0.950
+ 113    0.0 1.5e-04   1.003     376.57 nan            nan        nan      nan   0.522  0.0010    2.0     0.00    678113  0.950
+ 114    0.0 1.4e-04   0.994     374.30 nan            nan        nan      nan   0.510  0.0030    2.2     0.00    684114  0.950
+ 115    0.0 1.4e-04   1.001     374.36 nan            nan        nan      nan   0.510  0.0024    2.3     0.00    690115  0.950
+ 116    0.0 1.3e-04   0.995     374.14 nan            nan        nan      nan   0.521  0.0029    2.5     0.00    696116  0.950
+ 117    0.0 1.2e-04   0.996     372.18 nan            nan        nan      nan   0.501  0.0019    2.7     0.00    702117  0.950
+ 118    0.0 1.2e-04   0.996     369.18 nan            nan        nan      nan   0.479  0.0019    2.9     0.00    708118  0.950
+ 119    0.0 1.1e-04   0.997     367.65 nan            nan        nan      nan   0.470  0.0020    3.0     0.00    714119  0.950
+ 120    0.0 1.0e-04   0.996     367.44 nan            nan        nan      nan   0.438  0.0021    3.1     0.00    720120  0.950
+ 121    0.0 9.9e-05   0.997     365.52 nan            nan        nan      nan   0.425  0.0012    3.1     0.00    726121  0.950
+ 122    0.0 9.4e-05   1.001     364.95 nan            nan        nan      nan   0.440  0.0011    3.0     0.00    732122  0.950
+ 123    0.0 9.0e-05   0.997     364.53 nan            nan        nan      nan   0.420  0.0013    3.0     0.00    738123  0.950
+ 124    0.0 8.5e-05   0.997     362.81 nan            nan        nan      nan   0.466  0.0018    3.0     0.00    744124  0.950
+ 125    0.0 8.1e-05   1.001     362.18 nan            nan        nan      nan   0.412  0.0014    3.0     0.00    750125  0.950
+ 126    0.0 7.7e-05   0.998     361.21 nan            nan        nan      nan   0.448  0.0010    2.9     0.00    756126  0.950
+ 127    0.0 7.3e-05   0.996     359.76 nan            nan        nan      nan   0.428  0.0020    3.0     0.00    762127  0.950
+ 128    0.0 6.9e-05   0.998     358.01 nan            nan        nan      nan   0.421  0.0016    2.9     0.00    768128  0.950
+ 129    0.0 6.6e-05   0.998     356.55 nan            nan        nan      nan   0.413  0.0013    2.9     0.00    774129  0.950
+ 130    0.0 6.3e-05   0.999     355.82 nan            nan        nan      nan   0.400  0.0014    2.8     0.00    780130  0.950
+ 131    0.0 5.9e-05   0.997     354.04 nan            nan        nan      nan   0.395  0.0014    2.7     0.00    786131  0.950
+ 132    0.0 5.6e-05   0.998     353.33 nan            nan        nan      nan   0.378  0.0009    2.6     0.00    792132  0.950
+ 133    0.0 5.4e-05   0.999     352.41 nan            nan        nan      nan   0.384  0.0006    2.4     0.00    798133  0.950
+ 134    0.0 5.1e-05   0.998     351.45 nan            nan        nan      nan   0.351  0.0011    2.3     0.00    804134  0.950
+ 135    0.0 4.8e-05   0.999     350.78 nan            nan        nan      nan   0.351  0.0004    2.1     0.00    810135  0.950
+ 136    0.0 4.6e-05   0.998     349.72 nan            nan        nan      nan   0.357  0.0010    1.9     0.00    816136  0.950
+ 137    0.0 4.4e-05   1.000     349.04 nan            nan        nan      nan   0.355  0.0005    1.7     0.00    822137  0.950
+ 138    0.0 4.1e-05   0.999     348.35 nan            nan        nan      nan   0.354  0.0008    1.6     0.00    828138  0.950
+ 139    0.0 3.9e-05   0.999     347.67 nan            nan        nan      nan   0.331  0.0004    1.4     0.00    834139  0.950
+ 140    0.0 3.7e-05   1.000     347.36 nan            nan        nan      nan   0.322  0.0003    1.3     0.00    840140  0.950
+ 141    0.0 3.6e-05   0.999     346.97 nan            nan        nan      nan   0.315  0.0003    1.1     0.00    846141  0.950
+ 142    0.0 3.4e-05   0.999     346.71 nan            nan        nan      nan   0.306  0.0005    1.0     0.00    852142  0.950
+ 143    0.0 3.2e-05   1.000     346.29 nan            nan        nan      nan   0.303  0.0004    1.0     0.00    858143  0.950
+ 144    0.0 3.1e-05   0.999     345.95 nan            nan        nan      nan   0.294  0.0005    1.0     0.00    864144  0.950
+ 145    0.0 2.9e-05   0.999     345.66 nan            nan        nan      nan   0.295  0.0006    1.0     0.00    870145  0.950
+ 146    0.0 2.8e-05   1.000     345.28 nan            nan        nan      nan   0.285  0.0002    1.0     0.00    876146  0.950
+ 147    0.0 2.6e-05   1.000     345.09 nan            nan        nan      nan   0.294  0.0002    1.0     0.00    882147  0.950
+ 148    0.0 2.5e-05   1.000     344.81 nan            nan        nan      nan   0.271  0.0003    1.0     0.00    888148  0.950
+ 149    0.0 2.4e-05   0.999     344.52 nan            nan        nan      nan   0.267  0.0003    1.0     0.00    894149  0.950
+ 150    0.0 2.2e-05   0.999     344.31 nan            nan        nan      nan   0.256  0.0002    1.0     0.00    900150  0.950
+ 151    0.0 2.1e-05   1.000     344.18 nan            nan        nan      nan   0.259  0.0001    1.0     0.00    906151  0.950
+ 152    0.0 2.0e-05   1.000     344.04 nan            nan        nan      nan   0.261  0.0004    1.0     0.00    912152  0.950
+ 153    0.0 1.9e-05   1.000     343.74 nan            nan        nan      nan   0.253  0.0004    1.0     0.00    918153  0.950
+ 154    0.0 1.8e-05   1.000     343.68 nan            nan        nan      nan   0.264  0.0001    1.0     0.00    924154  0.950
+ 155    0.0 1.7e-05   1.000     343.52 nan            nan        nan      nan   0.246  0.0001    1.0     0.00    930155  0.950
+ 156    0.0 1.6e-05   1.000     343.40 nan            nan        nan      nan   0.237  0.0001    1.0     0.00    936156  0.950
+ 157    0.0 1.6e-05   1.000     343.27 nan            nan        nan      nan   0.238  0.0001    1.0     0.00    942157  0.950
+ 158    0.0 1.5e-05   0.999     343.12 nan            nan        nan      nan   0.229  0.0002    1.0     0.00    948158  0.950
+ 159    0.0 1.4e-05   1.000     343.00 nan            nan        nan      nan   0.231  0.0003    1.0     0.00    954159  0.950
+ 160    0.0 1.3e-05   1.000     342.72 nan            nan        nan      nan   0.231  0.0001    1.0     0.00    960160  0.950
+ 161    0.0 1.3e-05   1.000     342.69 nan            nan        nan      nan   0.231  0.0001    1.0     0.00    966161  0.950
+ 162    0.0 1.2e-05   1.000     342.63 nan            nan        nan      nan   0.223  0.0001    1.0     0.00    972162  0.950
+ 163    0.0 1.2e-05   1.000     342.57 nan            nan        nan      nan   0.231  0.0001    1.0     0.00    978163  0.950
+ 164    0.0 1.1e-05   1.000     342.40 nan            nan        nan      nan   0.217  0.0001    1.0     0.00    984164  0.950
+ 165    0.0 1.0e-05   1.000     342.26 nan            nan        nan      nan   0.214  0.0001    1.0     0.00    990165  0.950
+ 166    0.0 9.9e-06   1.000     342.16 nan            nan        nan      nan   0.205  0.0001    1.0     0.00    996166  0.950
+ 167    0.0 9.4e-06   1.000     342.09 nan            nan        nan      nan   0.214  0.0001    1.0     0.00   1002167  0.950
+ 168    0.0 8.9e-06   1.000     342.06 nan            nan        nan      nan   0.203  0.0001    1.0     0.00   1008168  0.950
+ 169    0.0 8.5e-06   1.000     342.04 nan            nan        nan      nan   0.202  0.0000    1.0     0.00   1014169  0.950
+ 170    0.0 8.0e-06   1.000     341.99 nan            nan        nan      nan   0.193  0.0001    1.0     0.00   1020170  0.950
+ 171    0.0 7.6e-06   1.000     341.97 nan            nan        nan      nan   0.196  0.0001    1.0     0.00   1026171  0.950
+ 172    0.0 7.3e-06   1.000     341.98 nan            nan        nan      nan   0.202  0.0000    1.0     0.00   1032172  0.950
+ 173    0.0 6.9e-06   1.000     342.00 nan            nan        nan      nan   0.191  0.0001    1.0     0.00   1038173  0.950
+ 174    0.0 6.5e-06   1.000     341.93 nan            nan        nan      nan   0.198  0.0001    1.0     0.00   1044174  0.950
+ 175    0.0 6.2e-06   1.000     341.91 nan            nan        nan      nan   0.195  0.0000    1.0     0.00   1050175  0.950
+ 176    0.0 5.9e-06   1.000     341.89 nan            nan        nan      nan   0.188  0.0000    1.0     0.00   1056176  0.950
+ 177    0.0 5.6e-06   1.000     341.86 nan            nan        nan      nan   0.192  0.0000    1.0     0.00   1062177  0.950
+ 178    0.0 5.3e-06   1.000     341.87 nan            nan        nan      nan   0.196  0.0000    1.0     0.00   1068178  0.950
+ 179    0.0 5.1e-06   1.000     341.86 nan            nan        nan      nan   0.195  0.0000    1.0     0.00   1074179  0.950
+ 180    0.0 4.8e-06   1.000     341.83 nan            nan        nan      nan   0.189  0.0000    1.0     0.00   1080180  0.950
+ 181    0.0 4.6e-06   1.000     341.81 nan            nan        nan      nan   0.184  0.0000    1.0     0.00   1086181  0.950
+ 182    0.0 4.3e-06   1.000     341.81 nan            nan        nan      nan   0.188  0.0000    1.0     0.00   1092182  0.950
+ 183    0.0 4.1e-06   1.000     341.80 nan            nan        nan      nan   0.190  0.0000    1.0     0.00   1098183  0.950
+ 184    0.0 3.9e-06   1.000     341.79 nan            nan        nan      nan   0.186  0.0000    1.0     0.00   1104184  0.950
+ 185    0.0 3.7e-06   1.000     341.76 nan            nan        nan      nan   0.182  0.0000    1.0     0.00   1110185  0.950
+ 186    0.0 3.5e-06   1.000     341.75 nan            nan        nan      nan   0.184  0.0000    1.0     0.00   1116186  0.950
+ 187    0.0 3.4e-06   1.000     341.75 nan            nan        nan      nan   0.177  0.0000    1.0     0.00   1122187  0.950
+ 188    0.0 3.2e-06   1.000     341.76 nan            nan        nan      nan   0.186  0.0000    1.0     0.00   1128188  0.950
+ 189    0.0 3.0e-06   1.000     341.76 nan            nan        nan      nan   0.189  0.0000    1.0     0.00   1134189  0.950
+ 190    0.0 2.9e-06   1.000     341.75 nan            nan        nan      nan   0.183  0.0000    1.0     0.00   1140190  0.950
+ 191    0.0 2.7e-06   1.000     341.75 nan            nan        nan      nan   0.194  0.0000    1.0     0.00   1146191  0.950
+ 192    0.0 2.6e-06   1.000     341.75 nan            nan        nan      nan   0.190  0.0000    1.0     0.00   1152192  0.950
+ 193    0.0 2.5e-06   1.000     341.74 nan            nan        nan      nan   0.192  0.0000    1.0     0.00   1158193  0.950
+ 194    0.0 2.3e-06   1.000     341.74 nan            nan        nan      nan   0.177  0.0000    1.0     0.00   1164194  0.950
+ 195    0.0 2.2e-06   1.000     341.74 nan            nan        nan      nan   0.179  0.0000    1.0     0.00   1170195  0.950
+ 196    0.0 2.1e-06   1.000     341.74 nan            nan        nan      nan   0.180  0.0000    1.0     0.00   1176196  0.950
+ 197    0.0 2.0e-04   1.040     355.44 nan            nan        nan      nan   0.525  0.0156    1.0     0.00   1182197  0.950
+ 198    0.0 1.9e-04   1.014     367.74 nan            nan        nan      nan   0.565  0.0062    1.1     0.00   1188198  0.950
+ 199    0.0 1.8e-04   1.006     372.78 nan            nan        nan      nan   0.583  0.0052    1.2     0.00   1194199  0.950
+ 200    0.0 1.7e-04   1.003     376.07 nan            nan        nan      nan   0.573  0.0018    1.4     0.00   1200200  0.950
+ 201    0.0 1.6e-04   0.996     375.25 nan            nan        nan      nan   0.566  0.0017    1.6     0.00   1206201  0.950
+ 202    0.0 1.6e-04   0.998     374.22 nan            nan        nan      nan   0.561  0.0021    1.8     0.00   1212202  0.950
+ 203    0.0 1.5e-04   0.993     370.15 nan            nan        nan      nan   0.543  0.0043    2.0     0.00   1218203  0.950
+ 204    0.0 1.4e-04   1.007     369.42 nan            nan        nan      nan   0.504  0.0040    2.2     0.00   1224204  0.950
+ 205    0.0 1.3e-04   1.000     371.68 nan            nan        nan      nan   0.523  0.0017    2.3     0.00   1230205  0.950
+ 206    0.0 1.3e-04   0.998     370.11 nan            nan        nan      nan   0.519  0.0013    2.5     0.00   1236206  0.950
+ 207    0.0 1.2e-04   0.996     368.20 nan            nan        nan      nan   0.490  0.0022    2.7     0.00   1242207  0.950
+ 208    0.0 1.1e-04   0.998     366.27 nan            nan        nan      nan   0.480  0.0023    2.9     0.00   1248208  0.950
+ 209    0.0 1.1e-04   0.996     363.54 nan            nan        nan      nan   0.470  0.0016    3.0     0.00   1254209  0.950
+ 210    0.0 1.0e-04   0.998     362.63 nan            nan        nan      nan   0.428  0.0013    3.1     0.00   1260210  0.950
+ 211    0.0 9.8e-05   1.001     362.97 nan            nan        nan      nan   0.433  0.0011    3.0     0.00   1266211  0.950
+ 212    0.0 9.3e-05   0.996     360.67 nan            nan        nan      nan   0.427  0.0022    3.0     0.00   1272212  0.950
+ 213    0.0 8.9e-05   0.999     359.67 nan            nan        nan      nan   0.466  0.0006    3.0     0.00   1278213  0.950
+ 214    0.0 8.4e-05   0.998     359.04 nan            nan        nan      nan   0.390  0.0013    3.1     0.00   1284214  0.950
+ 215    0.0 8.0e-05   0.997     357.36 nan            nan        nan      nan   0.430  0.0022    2.9     0.00   1290215  0.950
+ 216    0.0 7.6e-05   0.999     355.84 nan            nan        nan      nan   0.434  0.0007    2.9     0.00   1296216  0.950
+ 217    0.0 7.2e-05   0.998     355.25 nan            nan        nan      nan   0.422  0.0020    2.9     0.00   1302217  0.950
+ 218    0.0 6.9e-05   0.997     353.24 nan            nan        nan      nan   0.407  0.0008    2.8     0.00   1308218  0.950
+ 219    0.0 6.5e-05   0.998     351.90 nan            nan        nan      nan   0.408  0.0014    2.7     0.00   1314219  0.950
+ 220    0.0 6.2e-05   0.999     350.83 nan            nan        nan      nan   0.391  0.0012    2.6     0.00   1320220  0.950
+ 221    0.0 5.9e-05   1.000     350.29 nan            nan        nan      nan   0.396  0.0007    2.5     0.00   1326221  0.950
+ 222    0.0 5.6e-05   0.998     350.21 nan            nan        nan      nan   0.384  0.0011    2.4     0.00   1332222  0.950
+ 223    0.0 5.3e-05   0.998     349.09 nan            nan        nan      nan   0.381  0.0015    2.3     0.00   1338223  0.950
+ 224    0.0 5.0e-05   0.999     348.40 nan            nan        nan      nan   0.356  0.0008    2.1     0.00   1344224  0.950
+ 225    0.0 4.8e-05   0.998     347.45 nan            nan        nan      nan   0.379  0.0011    1.9     0.00   1350225  0.950
+ 226    0.0 4.5e-05   1.000     347.00 nan            nan        nan      nan   0.374  0.0006    1.8     0.00   1356226  0.950
+ 227    0.0 4.3e-05   0.999     346.60 nan            nan        nan      nan   0.359  0.0006    1.7     0.00   1362227  0.950
+ 228    0.0 4.1e-05   0.998     345.81 nan            nan        nan      nan   0.347  0.0007    1.6     0.00   1368228  0.950
+ 229    0.0 3.9e-05   1.001     346.00 nan            nan        nan      nan   0.357  0.0003    1.4     0.00   1374229  0.950
+ 230    0.0 3.7e-05   0.999     345.52 nan            nan        nan      nan   0.335  0.0004    1.3     0.00   1380230  0.950
+ 231    0.0 3.5e-05   0.999     344.94 nan            nan        nan      nan   0.326  0.0005    1.2     0.00   1386231  0.950
+ 232    0.0 3.3e-05   0.999     344.41 nan            nan        nan      nan   0.313  0.0003    1.0     0.00   1392232  0.950
+ 233    0.0 3.2e-05   0.999     344.01 nan            nan        nan      nan   0.307  0.0004    1.0     0.00   1398233  0.950
+ 234    0.0 3.0e-05   1.000     343.88 nan            nan        nan      nan   0.316  0.0003    1.0     0.00   1404234  0.950
+ 235    0.0 2.9e-05   0.999     343.72 nan            nan        nan      nan   0.288  0.0006    1.0     0.00   1410235  0.950
+ 236    0.0 2.7e-05   0.999     343.26 nan            nan        nan      nan   0.293  0.0003    1.0     0.00   1416236  0.950
+ 237    0.0 2.6e-05   1.000     343.13 nan            nan        nan      nan   0.300  0.0004    1.0     0.00   1422237  0.950
+ 238    0.0 2.5e-05   1.000     343.15 nan            nan        nan      nan   0.297  0.0003    1.0     0.00   1428238  0.950
+ 239    0.0 2.3e-05   1.000     342.92 nan            nan        nan      nan   0.279  0.0003    1.0     0.00   1434239  0.950
+ 240    0.0 2.2e-05   0.999     342.72 nan            nan        nan      nan   0.268  0.0003    1.0     0.00   1440240  0.950
+ 241    0.0 2.1e-05   1.000     342.44 nan            nan        nan      nan   0.287  0.0005    1.0     0.00   1446241  0.950
+ 242    0.0 2.0e-05   1.000     342.07 nan            nan        nan      nan   0.259  0.0002    1.0     0.00   1452242  0.950
+ 243    0.0 1.9e-05   1.000     341.87 nan            nan        nan      nan   0.254  0.0001    1.0     0.00   1458243  0.950
+ 244    0.0 1.8e-05   1.000     341.78 nan            nan        nan      nan   0.258  0.0001    1.0     0.00   1464244  0.950
+ 245    0.0 1.7e-05   1.000     341.69 nan            nan        nan      nan   0.255  0.0001    1.0     0.00   1470245  0.950
+ 246    0.0 1.6e-05   1.000     341.70 nan            nan        nan      nan   0.258  0.0002    1.0     0.00   1476246  0.950
+ 247    0.0 1.5e-05   0.999     341.37 nan            nan        nan      nan   0.246  0.0004    1.0     0.00   1482247  0.950
+ 248    0.0 1.5e-05   1.000     341.15 nan            nan        nan      nan   0.234  0.0002    1.0     0.00   1488248  0.950
+ 249    0.0 1.4e-05   1.000     340.96 nan            nan        nan      nan   0.237  0.0001    1.0     0.00   1494249  0.950
+ 250    0.0 1.3e-05   1.000     340.75 nan            nan        nan      nan   0.221  0.0002    1.0     0.00   1500250  0.950
+ 251    0.0 1.3e-05   1.000     340.59 nan            nan        nan      nan   0.227  0.0001    1.0     0.00   1506251  0.950
+ 252    0.0 1.2e-05   1.000     340.56 nan            nan        nan      nan   0.227  0.0001    1.0     0.00   1512252  0.950
+ 253    0.0 1.1e-05   1.000     340.44 nan            nan        nan      nan   0.228  0.0001    1.0     0.00   1518253  0.950
+ 254    0.0 1.1e-05   1.000     340.39 nan            nan        nan      nan   0.220  0.0001    1.0     0.00   1524254  0.950
+ 255    0.0 1.0e-05   1.000     340.32 nan            nan        nan      nan   0.221  0.0001    1.0     0.00   1530255  0.950
+ 256    0.0 9.8e-06   1.000     340.25 nan            nan        nan      nan   0.218  0.0002    1.0     0.00   1536256  0.950
+ 257    0.0 9.3e-06   1.000     340.19 nan            nan        nan      nan   0.226  0.0001    1.0     0.00   1542257  0.950
+ 258    0.0 8.8e-06   1.000     340.12 nan            nan        nan      nan   0.212  0.0001    1.0     0.00   1548258  0.950
+ 259    0.0 8.4e-06   1.000     340.06 nan            nan        nan      nan   0.215  0.0000    1.0     0.00   1554259  0.950
+ 260    0.0 7.9e-06   1.000     340.05 nan            nan        nan      nan   0.212  0.0000    1.0     0.00   1560260  0.950
+ 261    0.0 7.6e-06   1.000     339.98 nan            nan        nan      nan   0.208  0.0001    1.0     0.00   1566261  0.950
+ 262    0.0 7.2e-06   1.000     339.94 nan            nan        nan      nan   0.207  0.0001    1.0     0.00   1572262  0.950
+ 263    0.0 6.8e-06   1.000     339.94 nan            nan        nan      nan   0.190  0.0000    1.0     0.00   1578263  0.950
+ 264    0.0 6.5e-06   1.000     339.93 nan            nan        nan      nan   0.206  0.0000    1.0     0.00   1584264  0.950
+ 265    0.0 6.2e-06   1.000     339.88 nan            nan        nan      nan   0.199  0.0000    1.0     0.00   1590265  0.950
+ 266    0.0 5.8e-06   1.000     339.87 nan            nan        nan      nan   0.197  0.0000    1.0     0.00   1596266  0.950
+ 267    0.0 5.6e-06   1.000     339.86 nan            nan        nan      nan   0.199  0.0001    1.0     0.00   1602267  0.950
+ 268    0.0 5.3e-06   1.000     339.81 nan            nan        nan      nan   0.200  0.0000    1.0     0.00   1608268  0.950
+ 269    0.0 5.0e-06   1.000     339.81 nan            nan        nan      nan   0.199  0.0000    1.0     0.00   1614269  0.950
+ 270    0.0 4.8e-06   1.000     339.79 nan            nan        nan      nan   0.198  0.0000    1.0     0.00   1620270  0.950
+ 271    0.0 4.5e-06   1.000     339.78 nan            nan        nan      nan   0.190  0.0000    1.0     0.00   1626271  0.950
+ 272    0.0 4.3e-06   1.000     339.78 nan            nan        nan      nan   0.203  0.0000    1.0     0.00   1632272  0.950
+ 273    0.0 4.1e-06   1.000     339.77 nan            nan        nan      nan   0.191  0.0000    1.0     0.00   1638273  0.950
+ 274    0.0 3.9e-06   1.000     339.75 nan            nan        nan      nan   0.185  0.0000    1.0     0.00   1644274  0.950
+ 275    0.0 3.7e-06   1.000     339.74 nan            nan        nan      nan   0.198  0.0000    1.0     0.00   1650275  0.950
+ 276    0.0 3.5e-06   1.000     339.73 nan            nan        nan      nan   0.186  0.0000    1.0     0.00   1656276  0.950
+ 277    0.0 3.3e-06   1.000     339.73 nan            nan        nan      nan   0.192  0.0000    1.0     0.00   1662277  0.950
+ 278    0.0 3.2e-06   1.000     339.74 nan            nan        nan      nan   0.195  0.0000    1.0     0.00   1668278  0.950
+ 279    0.0 3.0e-06   1.000     339.72 nan            nan        nan      nan   0.173  0.0000    1.0     0.00   1674279  0.950
+ 280    0.0 2.8e-06   1.000     339.72 nan            nan        nan      nan   0.181  0.0000    1.0     0.00   1680280  0.950
+ 281    0.0 2.7e-06   1.000     339.72 nan            nan        nan      nan   0.186  0.0000    1.0     0.00   1686281  0.950
+ 282    0.0 2.6e-06   1.000     339.72 nan            nan        nan      nan   0.189  0.0000    1.0     0.00   1692282  0.950
+ 283    0.0 2.4e-06   1.000     339.72 nan            nan        nan      nan   0.198  0.0000    1.0     0.00   1698283  0.950
+ 284    0.0 2.3e-06   1.000     339.72 nan            nan        nan      nan   0.188  0.0000    1.0     0.00   1704284  0.950
+ 285    0.0 2.2e-06   1.000     339.72 nan            nan        nan      nan   0.185  0.0000    1.0     0.00   1710285  0.950
+ 286    0.0 2.1e-04   1.046     355.25 nan            nan        nan      nan   0.539  0.0197    1.0     0.00   1716286  0.950
+ 287    0.0 2.0e-04   1.010     368.22 nan            nan        nan      nan   0.569  0.0057    1.1     0.00   1722287  0.950
+ 288    0.0 1.9e-04   1.005     373.95 nan            nan        nan      nan   0.582  0.0016    1.2     0.00   1728288  0.950
+ 289    0.0 1.8e-04   1.001     374.33 nan            nan        nan      nan   0.583  0.0029    1.4     0.00   1734289  0.950
+ 290    0.0 1.7e-04   0.999     375.38 nan            nan        nan      nan   0.579  0.0024    1.6     0.00   1740290  0.950
+ 291    0.0 1.6e-04   1.000     374.67 nan            nan        nan      nan   0.567  0.0022    1.8     0.00   1746291  0.950
+ 292    0.0 1.5e-04   0.999     373.37 nan            nan        nan      nan   0.540  0.0011    2.1     0.00   1752292  0.950
+ 293    0.0 1.5e-04   0.999     373.86 nan            nan        nan      nan   0.542  0.0016    2.3     0.00   1758293  0.950
+ 294    0.0 1.4e-04   0.997     371.95 nan            nan        nan      nan   0.536  0.0029    2.5     0.00   1764294  0.950
+ 295    0.0 1.3e-04   0.993     368.38 nan            nan        nan      nan   0.517  0.0028    2.8     0.00   1770295  0.950
+ 296    0.0 1.3e-04   1.002     367.95 nan            nan        nan      nan   0.510  0.0009    3.0     0.00   1776296  0.950
+ 297    0.0 1.2e-04   1.000     367.58 nan            nan        nan      nan   0.462  0.0025    3.2     0.00   1782297  0.950
+ 298    0.0 1.1e-04   1.000     365.81 nan            nan        nan      nan   0.455  0.0008    3.3     0.00   1788298  0.950
+ 299    0.0 1.1e-04   0.998     364.87 nan            nan        nan      nan   0.448  0.0017    3.3     0.00   1794299  0.950
+ 300    0.0 1.0e-04   0.997     362.84 nan            nan        nan      nan   0.452  0.0013    3.3     0.00   1800300  0.950
+ 301    0.0 9.7e-05   0.997     361.79 nan            nan        nan      nan   0.442  0.0009    3.4     0.00   1806301  0.950
+ 302    0.0 9.2e-05   0.998     360.93 nan            nan        nan      nan   0.436  0.0019    3.4     0.00   1812302  0.950
+ 303    0.0 8.8e-05   0.999     359.91 nan            nan        nan      nan   0.434  0.0012    3.4     0.00   1818303  0.950
+ 304    0.0 8.3e-05   0.996     357.77 nan            nan        nan      nan   0.419  0.0018    3.3     0.00   1824304  0.950
+ 305    0.0 7.9e-05   0.996     356.28 nan            nan        nan      nan   0.420  0.0018    3.3     0.00   1830305  0.950
+ 306    0.0 7.5e-05   1.000     355.12 nan            nan        nan      nan   0.395  0.0007    3.2     0.00   1836306  0.950
+ 307    0.0 7.1e-05   0.998     354.86 nan            nan        nan      nan   0.404  0.0010    3.1     0.00   1842307  0.950
+ 308    0.0 6.8e-05   0.996     352.76 nan            nan        nan      nan   0.436  0.0016    3.0     0.00   1848308  0.950
+ 309    0.0 6.4e-05   0.998     351.28 nan            nan        nan      nan   0.427  0.0013    2.9     0.00   1854309  0.950
+ 310    0.0 6.1e-05   0.999     350.28 nan            nan        nan      nan   0.407  0.0004    2.9     0.00   1860310  0.950
+ 311    0.0 5.8e-05   1.000     350.20 nan            nan        nan      nan   0.406  0.0006    2.8     0.00   1866311  0.950
+ 312    0.0 5.5e-05   0.997     349.06 nan            nan        nan      nan   0.382  0.0012    2.7     0.00   1872312  0.950
+ 313    0.0 5.2e-05   0.999     348.19 nan            nan        nan      nan   0.389  0.0011    2.6     0.00   1878313  0.950
+ 314    0.0 5.0e-05   0.998     346.99 nan            nan        nan      nan   0.367  0.0012    2.4     0.00   1884314  0.950
+ 315    0.0 4.7e-05   0.999     345.92 nan            nan        nan      nan   0.352  0.0006    2.3     0.00   1890315  0.950
+ 316    0.0 4.5e-05   0.999     345.54 nan            nan        nan      nan   0.351  0.0005    2.1     0.00   1896316  0.950
+ 317    0.0 4.3e-05   0.998     344.84 nan            nan        nan      nan   0.363  0.0010    1.9     0.00   1902317  0.950
+ 318    0.0 4.1e-05   0.999     343.85 nan            nan        nan      nan   0.351  0.0006    1.7     0.00   1908318  0.950
+ 319    0.0 3.9e-05   0.999     343.14 nan            nan        nan      nan   0.336  0.0007    1.6     0.00   1914319  0.950
+ 320    0.0 3.7e-05   0.999     342.79 nan            nan        nan      nan   0.341  0.0003    1.4     0.00   1920320  0.950
+ 321    0.0 3.5e-05   0.999     342.30 nan            nan        nan      nan   0.324  0.0006    1.3     0.00   1926321  0.950
+ 322    0.0 3.3e-05   0.999     341.83 nan            nan        nan      nan   0.304  0.0006    1.1     0.00   1932322  0.950
+ 323    0.0 3.1e-05   0.999     341.40 nan            nan        nan      nan   0.303  0.0005    1.0     0.00   1938323  0.950
+ 324    0.0 3.0e-05   1.000     341.49 nan            nan        nan      nan   0.300  0.0004    1.0     0.00   1944324  0.950
+ 325    0.0 2.8e-05   0.999     341.12 nan            nan        nan      nan   0.289  0.0006    1.0     0.00   1950325  0.950
+ 326    0.0 2.7e-05   1.000     340.79 nan            nan        nan      nan   0.290  0.0003    1.0     0.00   1956326  0.950
+ 327    0.0 2.6e-05   1.000     340.55 nan            nan        nan      nan   0.281  0.0003    1.0     0.00   1962327  0.950
+ 328    0.0 2.4e-05   1.000     340.37 nan            nan        nan      nan   0.277  0.0003    1.0     0.00   1968328  0.950
+ 329    0.0 2.3e-05   0.999     339.92 nan            nan        nan      nan   0.265  0.0004    1.0     0.00   1974329  0.950
+ 330    0.0 2.2e-05   1.000     339.80 nan            nan        nan      nan   0.259  0.0002    1.0     0.00   1980330  0.950
+ 331    0.0 2.1e-05   1.000     339.73 nan            nan        nan      nan   0.263  0.0002    1.0     0.00   1986331  0.950
+ 332    0.0 2.0e-05   1.000     339.58 nan            nan        nan      nan   0.243  0.0004    1.0     0.00   1992332  0.950
+ 333    0.0 1.9e-05   1.000     339.31 nan            nan        nan      nan   0.251  0.0003    1.0     0.00   1998333  0.950
+ 334    0.0 1.8e-05   1.000     339.19 nan            nan        nan      nan   0.249  0.0001    1.0     0.00   2004334  0.950
+ 335    0.0 1.7e-05   1.000     339.19 nan            nan        nan      nan   0.255  0.0004    1.0     0.00   2010335  0.950
+ 336    0.0 1.6e-05   1.000     338.90 nan            nan        nan      nan   0.246  0.0001    1.0     0.00   2016336  0.950
+ 337    0.0 1.5e-05   1.000     338.83 nan            nan        nan      nan   0.246  0.0003    1.0     0.00   2022337  0.950
+ 338    0.0 1.5e-05   1.000     338.61 nan            nan        nan      nan   0.238  0.0002    1.0     0.00   2028338  0.950
+ 339    0.0 1.4e-05   1.000     338.46 nan            nan        nan      nan   0.233  0.0001    1.0     0.00   2034339  0.950
+ 340    0.0 1.3e-05   1.000     338.37 nan            nan        nan      nan   0.232  0.0001    1.0     0.00   2040340  0.950
+ 341    0.0 1.2e-05   1.000     338.34 nan            nan        nan      nan   0.230  0.0001    1.0     0.00   2046341  0.950
+ 342    0.0 1.2e-05   1.000     338.27 nan            nan        nan      nan   0.223  0.0003    1.0     0.00   2052342  0.950
+ 343    0.0 1.1e-05   1.000     338.26 nan            nan        nan      nan   0.223  0.0001    1.0     0.00   2058343  0.950
+ 344    0.0 1.1e-05   1.000     338.15 nan            nan        nan      nan   0.215  0.0002    1.0     0.00   2064344  0.950
+ 345    0.0 1.0e-05   1.000     338.05 nan            nan        nan      nan   0.206  0.0001    1.0     0.00   2070345  0.950
+ 346    0.0 9.6e-06   1.000     337.95 nan            nan        nan      nan   0.206  0.0001    1.0     0.00   2076346  0.950
+ 347    0.0 9.2e-06   1.000     337.88 nan            nan        nan      nan   0.213  0.0000    1.0     0.00   2082347  0.950
+ 348    0.0 8.7e-06   1.000     337.89 nan            nan        nan      nan   0.224  0.0001    1.0     0.00   2088348  0.950
+ 349    0.0 8.3e-06   1.000     337.84 nan            nan        nan      nan   0.211  0.0000    1.0     0.00   2094349  0.950
+ 350    0.0 7.9e-06   1.000     337.81 nan            nan        nan      nan   0.203  0.0000    1.0     0.00   2100350  0.950
+ 351    0.0 7.5e-06   1.000     337.74 nan            nan        nan      nan   0.197  0.0001    1.0     0.00   2106351  0.950
+ 352    0.0 7.1e-06   1.000     337.71 nan            nan        nan      nan   0.196  0.0001    1.0     0.00   2112352  0.950
+ 353    0.0 6.7e-06   1.000     337.68 nan            nan        nan      nan   0.197  0.0000    1.0     0.00   2118353  0.950
+ 354    0.0 6.4e-06   1.000     337.67 nan            nan        nan      nan   0.190  0.0000    1.0     0.00   2124354  0.950
+ 355    0.0 6.1e-06   1.000     337.67 nan            nan        nan      nan   0.189  0.0000    1.0     0.00   2130355  0.950
+ 356    0.0 5.8e-06   1.000     337.64 nan            nan        nan      nan   0.201  0.0000    1.0     0.00   2136356  0.950
+ 357    0.0 5.5e-06   1.000     337.66 nan            nan        nan      nan   0.207  0.0000    1.0     0.00   2142357  0.950
+ 358    0.0 5.2e-06   1.000     337.62 nan            nan        nan      nan   0.203  0.0001    1.0     0.00   2148358  0.950
+ 359    0.0 5.0e-06   1.000     337.61 nan            nan        nan      nan   0.197  0.0000    1.0     0.00   2154359  0.950
+ 360    0.0 4.7e-06   1.000     337.60 nan            nan        nan      nan   0.187  0.0000    1.0     0.00   2160360  0.950
+ 361    0.0 4.5e-06   1.000     337.59 nan            nan        nan      nan   0.198  0.0000    1.0     0.00   2166361  0.950
+ 362    0.0 4.2e-06   1.000     337.60 nan            nan        nan      nan   0.200  0.0000    1.0     0.00   2172362  0.950
+ 363    0.0 4.0e-06   1.000     337.58 nan            nan        nan      nan   0.198  0.0000    1.0     0.00   2178363  0.950
+ 364    0.0 3.8e-06   1.000     337.56 nan            nan        nan      nan   0.199  0.0000    1.0     0.00   2184364  0.950
+ 365    0.0 3.6e-06   1.000     337.56 nan            nan        nan      nan   0.190  0.0000    1.0     0.00   2190365  0.950
+ 366    0.0 3.5e-06   1.000     337.55 nan            nan        nan      nan   0.181  0.0000    1.0     0.00   2196366  0.950
+ 367    0.0 3.3e-06   1.000     337.55 nan            nan        nan      nan   0.196  0.0000    1.0     0.00   2202367  0.950
+ 368    0.0 3.1e-06   1.000     337.54 nan            nan        nan      nan   0.183  0.0000    1.0     0.00   2208368  0.950
+ 369    0.0 3.0e-06   1.000     337.53 nan            nan        nan      nan   0.181  0.0000    1.0     0.00   2214369  0.950
+ 370    0.0 2.8e-06   1.000     337.53 nan            nan        nan      nan   0.177  0.0000    1.0     0.00   2220370  0.950
+ 371    0.0 2.7e-06   1.000     337.52 nan            nan        nan      nan   0.185  0.0000    1.0     0.00   2226371  0.950
+ 372    0.0 2.5e-06   1.000     337.51 nan            nan        nan      nan   0.180  0.0000    1.0     0.00   2232372  0.950
+ 373    0.0 2.4e-06   1.000     337.50 nan            nan        nan      nan   0.183  0.0000    1.0     0.00   2238373  0.950
+ 374    0.0 2.3e-06   1.000     337.49 nan            nan        nan      nan   0.189  0.0000    1.0     0.00   2244374  0.950
+ 375    0.0 2.2e-06   1.000     337.50 nan            nan        nan      nan   0.174  0.0000    1.0     0.00   2250375  0.950
+ 376    0.0 0.0e+00   1.000     337.49 nan            nan        nan      nan   0.094  0.0000    1.0     0.00   2256376  0.950
+## Placement Quench took 0.01 seconds (max_rss 456.4 MiB)
+
+BB estimate of min-dist (placement) wire length: 33749
+
+Completed placement consistency check successfully.
+
+Swaps called: 2257523
+
+Aborted Move Reasons:
+  No moves aborted
+Placement cost: 0.999976, bb_cost: 337.487, td_cost: nan, 
+
+Placement resource usage:
+  io      implemented as io     : 779
+  clb     implemented as clb    : 365
+  mult_36 implemented as mult_36: 1
+  memory  implemented as memory : 2
+
+Placement number of temperatures: 376
+Placement total # of swap attempts: 2257523
+	Swaps accepted:  716829 (31.8 %)
+	Swaps rejected: 1412737 (62.6 %)
+	Swaps aborted:  127957 ( 5.7 %)
+
+
+Placement perturbation distribution by block and move type: 
+------------------ ----------------- ---------------- ---------------- --------------- ------------ 
+    Block Type         Move Type       (%) of Total      Accepted(%)     Rejected(%)    Aborted(%)
+------------------ ----------------- ---------------- ---------------- --------------- ------------ 
+io                 Uniform                25.01            40.31           59.69          0.00         
+                   Median                 25.17            37.51           50.69          11.80        
+                   Centroid               25.04            39.12           52.74          8.14         
+
+clb                Uniform                6.80             8.85            91.15          0.00         
+                   Median                 9.46             9.85            83.56          6.59         
+                   Centroid               8.40             10.64           88.91          0.44         
+
+mult_36            Uniform                0.01             0.00            100.00         0.00         
+                   Median                 0.01             0.33            99.67          0.00         
+                   Centroid               0.01             0.00            100.00         0.00         
+
+memory             Uniform                0.02             0.20            99.80          0.00         
+                   Median                 0.02             0.19            99.81          0.00         
+                   Centroid               0.02             0.18            99.82          0.00         
+
+
+Placement Quench timing analysis took 0 seconds (0 STA, 0 slack) (0 full updates: 0 setup, 0 hold, 0 combined).
+Placement Total  timing analysis took 0 seconds (0 STA, 0 slack) (0 full updates: 0 setup, 0 hold, 0 combined).
+update_td_costs: connections 0 nets 0 sum_nets 0 total 0
+# Placement took 3.11 seconds (max_rss 456.4 MiB, delta_rss +0.0 MiB)
+
+Flow timing analysis took 0.00492287 seconds (0.00431998 STA, 0.000602897 slack) (1 full updates: 1 setup, 0 hold, 0 combined).
+VPR succeeded
+The entire flow of VPR took 4.39 seconds (max_rss 456.4 MiB)

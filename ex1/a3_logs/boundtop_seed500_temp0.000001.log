@@ -1,0 +1,412 @@
+VPR FPGA Placement and Routing.
+Version: 9.0.0-dev+v8.0.0-11943-g8cb20aa52
+Revision: v8.0.0-11943-g8cb20aa52
+Compiled: 2025-11-06T23:45:49
+Compiler: GNU 13.3.0 on Linux-6.6.87.2-microsoft-standard-WSL2 x86_64
+Build Info: release IPO VTR_ASSERT_LEVEL=2
+
+University of Toronto
+verilogtorouting.org
+vtr-users@googlegroups.com
+This is free open source code under MIT license.
+
+Warning 1: To use RLPlace for WLdriven placements, the reward function should be basic or nonPenalizing_basic.
+you can specify the reward function using --place_reward_fun.
+Setting the placement reward function to "basic"
+VPR was run with the following command-line:
+./vtr-verilog-to-routing/vpr/vpr k6_N10_mem32K_40nm.xml boundtop.blif --pack --place --place_algorithm bounding_box --seed 500 --init_t 1e-06 --exit_t 1e-07
+
+
+Architecture file: k6_N10_mem32K_40nm.xml
+Circuit name: boundtop
+
+# Loading Architecture Description
+# Loading Architecture Description took 0.01 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+
+Timing analysis: ON
+Circuit netlist file: boundtop.net
+Circuit placement file: boundtop.place
+Circuit routing file: boundtop.route
+Circuit SDC file: boundtop.sdc
+Vpr floorplanning constraints file: not specified
+
+Packer: ENABLED
+Placer: ENABLED
+Analytical Placer: DISABLED
+Router: DISABLED
+Analysis: DISABLED
+
+VPR was run with the following options:
+
+NetlistOpts.absorb_buffer_luts            : true
+NetlistOpts.sweep_dangling_primary_ios    : true
+NetlistOpts.sweep_dangling_nets           : true
+NetlistOpts.sweep_dangling_blocks         : true
+NetlistOpts.sweep_constant_primary_outputs: false
+NetlistOpts.netlist_verbosity             : 1
+NetlistOpts.const_gen_inference           : COMB_SEQ
+
+PackerOpts.allow_unrelated_clustering: auto
+PackerOpts.alpha_clustering: 0.750000
+PackerOpts.beta_clustering: 0.900000
+PackerOpts.cluster_seed_type: BLEND2
+PackerOpts.connection_driven: true
+PackerOpts.global_clocks: true
+PackerOpts.inter_cluster_net_delay: 1.000000
+PackerOpts.timing_driven: true
+PackerOpts.target_external_pin_util: auto
+
+PlacerOpts.place_freq: PLACE_ONCE
+PlacerOpts.place_algorithm: BOUNDING_BOX_PLACE
+PlacerOpts.pad_loc_type: FREE
+PlacerOpts.constraints_file: No constraints file given
+PlacerOpts.place_chan_width: 100
+PlacerOpts.rlim_escape_fraction: 0.000000
+PlacerOpts.move_stats_file: 
+PlacerOpts.placement_saves_per_temperature: 0
+PlacerOpts.effort_scaling: CIRCUIT
+PlacerOpts.place_delta_delay_matrix_calculation_method: ASTAR_ROUTE
+PlaceOpts.seed: 500
+AnnealSched.type: USER_SCHED
+AnnealSched.inner_num: 0.500000
+AnnealSched.init_t: 0.000001
+AnnealSched.alpha_t: 0.800000
+AnnealSched.exit_t: 0.000000
+
+# Building complex block graph
+Warning 2: io[0].clock[0] unconnected pin in architecture.
+# Building complex block graph took 0.01 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+Circuit file: boundtop.blif
+# Load circuit
+Found constant-zero generator 'top^tm3_sram_addr~18'
+Found constant-zero generator 'unconn'
+Found constant-zero generator 'n2240'
+Found constant-zero generator 'n3090'
+Found constant-zero generator 'n3175'
+Found constant-zero generator 'n3700'
+Found constant-zero generator 'n4105'
+Found constant-zero generator 'n4885'
+Found constant-zero generator 'n4890'
+Found constant-zero generator 'n4895'
+Found constant-zero generator 'n4900'
+Found constant-zero generator 'n5105'
+Found constant-zero generator 'n5110'
+Found constant-zero generator 'n5115'
+Found constant-zero generator 'n5540'
+Found constant-zero generator 'n5945'
+Found constant-zero generator 'n6735'
+Found constant-zero generator 'n6740'
+Found constant-zero generator 'n6745'
+Found constant-zero generator 'n6750'
+Found constant-zero generator 'n10555'
+Found constant-zero generator 'n10559'
+Found constant-zero generator 'n10563'
+Found constant-zero generator 'n10567'
+Found constant-zero generator 'n10571'
+Found constant-zero generator 'n10575'
+Found constant-zero generator 'n10579'
+Found constant-zero generator 'n10583'
+Found constant-zero generator 'n10587'
+Found constant-zero generator 'n10591'
+Found constant-zero generator 'n10595'
+Found constant-zero generator 'n10599'
+Found constant-zero generator 'n10603'
+Found constant-zero generator 'n10607'
+Found constant-zero generator 'n10611'
+Found constant-zero generator 'n10615'
+Found constant-zero generator 'n10619'
+Found constant-zero generator 'n10623'
+Found constant-zero generator 'n10627'
+Found constant-zero generator 'n10631'
+Found constant-zero generator 'n10635'
+Found constant-zero generator 'n10639'
+Found constant-zero generator 'n10643'
+Found constant-zero generator 'n10647'
+Found constant-zero generator 'n10651'
+Found constant-zero generator 'n10655'
+# Load circuit took 0.03 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+# Clean circuit
+Absorbed 77 LUT buffers
+Inferred    0 additional primitive pins as constant generators since they have no combinationally connected inputs
+Inferred   44 additional primitive pins as constant generators due to constant inputs
+Inferred    0 additional primitive pins as constant generators since they have no combinationally connected inputs
+Inferred    0 additional primitive pins as constant generators due to constant inputs
+Swept input(s)      : 0
+Swept output(s)     : 0 (0 dangling, 0 constant)
+Swept net(s)        : 0
+Swept block(s)      : 0
+Constant Pins Marked: 44
+# Clean circuit took 0.00 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+# Compress circuit
+# Compress circuit took 0.00 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+# Verify circuit
+# Verify circuit took 0.00 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+Circuit Statistics:
+  Blocks: 5224
+    .input         :     275
+    .latch         :    1671
+    .names         :    3054
+        0-LUT:      45
+        2-LUT:     681
+        3-LUT:     461
+        4-LUT:     360
+        5-LUT:     289
+        6-LUT:    1218
+    .output        :     192
+    single_port_ram:      32
+  Nets  : 5032
+    Avg Fanout:     3.4
+    Max Fanout:  1703.0
+    Min Fanout:     1.0
+  Netlist Clocks: 1
+# Build Timing Graph
+  Timing Graph Nodes: 21920
+  Timing Graph Edges: 33584
+  Timing Graph Levels: 22
+# Build Timing Graph took 0.01 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+Netlist contains 1 clocks
+  Netlist Clock 'top^tm3_clk_v0' Fanout: 1703 pins (7.8%), 1703 blocks (32.6%)
+# Load Timing Constraints
+
+SDC file 'boundtop.sdc' not found
+Setting default timing constraints:
+   * constrain all primay inputs and primary outputs on netlist clock 'top^tm3_clk_v0'
+   * optimize netlist clock to run as fast as possible
+Timing constraints created 1 clocks
+  Constrained Clock 'top^tm3_clk_v0' Source: 'top^tm3_clk_v0.inpad[0]'
+
+# Load Timing Constraints took 0.00 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+# Packing
+Begin packing 'boundtop.blif'.
+
+After removing unused inputs...
+	total blocks: 5224, total nets: 5032, total inputs: 275, total outputs: 192
+Begin prepacking.
+0 attraction groups were created during prepacking.
+Finish prepacking.
+Using inter-cluster delay: 1.33777e-09
+Packing with pin utilization targets: io:1,1 clb:0.8,0.6 mult_36:1,1 memory:1,1
+Packing with high fanout thresholds: io:128 clb:32 mult_36:128 memory:128
+Starting Clustering - Clustering Progress: 
+-------------------   --------------------------   ---------
+Molecules processed   Number of clusters created   FPGA size
+-------------------   --------------------------   ---------
+   151/3569      4%                           13     8 x 8     
+   299/3569      8%                           28     9 x 9     
+   449/3569     12%                           43    10 x 10    
+   599/3569     16%                           58    11 x 11    
+   749/3569     20%                           73    13 x 13    
+   897/3569     25%                           88    13 x 13    
+  1047/3569     29%                          103    14 x 14    
+  1193/3569     33%                          118    15 x 15    
+  1336/3569     37%                          135    16 x 16    
+  1481/3569     41%                          151    17 x 17    
+  1627/3569     45%                          166    17 x 17    
+  1774/3569     49%                          181    18 x 18    
+  1920/3569     53%                          198    19 x 19    
+  2063/3569     57%                          213    19 x 19    
+  2210/3569     61%                          229    20 x 20    
+  2355/3569     65%                          248    21 x 21    
+  2499/3569     70%                          268    22 x 22    
+  2646/3569     74%                          287    22 x 22    
+  2790/3569     78%                          305    23 x 23    
+  2936/3569     82%                          329    23 x 23    
+  3082/3569     86%                          361    25 x 25    
+  3224/3569     90%                          488    25 x 25    
+  3366/3569     94%                          630    25 x 25    
+  3508/3569     98%                          772    25 x 25    
+  3569/3569    100%                          833    25 x 25    
+
+Logic Element (fle) detailed count:
+  Total number of Logic Elements used : 3070
+  LEs used for logic and registers    : 1655
+  LEs used for logic only             : 1399
+  LEs used for registers only         : 16
+
+Incr Slack updates 1 in 0.00019681 sec
+Full Max Req/Worst Slack updates 1 in 2.1051e-05 sec
+Incr Max Req/Worst Slack updates 0 in 0 sec
+Incr Criticality updates 0 in 0 sec
+Full Criticality updates 1 in 0.000249973 sec
+FPGA sized to 25 x 25 (auto)
+Device Utilization: 0.69 (target 1.00)
+	Block Utilization: 0.63 Type: io
+	Block Utilization: 0.93 Type: clb
+	Block Utilization: 0.11 Type: memory
+
+Start the iterative improvement process
+the iterative improvement process is done
+Final Clustering Statistics: 
+----------   --------   ------------------------------------   --------------------------
+Block Type   # Blocks   Avg. # of input clocks and pins used   Avg. # of output pins used
+----------   --------   ------------------------------------   --------------------------
+     EMPTY          0                                      0                            0   
+        io        467                               0.411135                     0.588865   
+       clb        365                                17.0877                      5.12603   
+   mult_36          0                                      0                            0   
+    memory          1                                     44                           32   
+Absorbed logical nets 2854 out of 5032 nets, 2178 nets not absorbed.
+
+Netlist conversion complete.
+
+# Packing took 0.60 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+# Load packing
+Begin loading packed FPGA netlist file.
+Netlist generated from file 'boundtop.net'.
+Detected 45 constant generators (to see names run with higher pack verbosity)
+Finished loading packed FPGA netlist file (took 0.141359 seconds).
+Warning 3: Treated 37 constant nets as global which will not be routed (to see net names increase packer verbosity).
+Warning 4: Netlist contains 91 global net to non-global architecture pin connections
+Warning 5: Logic block #365 (top^tm3_sram_addr~18) has only 1 output pin 'top^tm3_sram_addr~18.O[9]'. It may be a constant generator.
+Completed clustering consistency check successfully.
+Cluster level netlist and block usage statistics
+Netlist num_nets: 2178
+Netlist num_blocks: 833
+Netlist EMPTY blocks: 0.
+Netlist io blocks: 467.
+Netlist clb blocks: 365.
+Netlist mult_36 blocks: 0.
+Netlist memory blocks: 1.
+Netlist inputs pins: 275
+Netlist output pins: 192
+
+Pb types usage...
+  io                 : 467
+   inpad             : 275
+   outpad            : 192
+  clb                : 365
+   fle               : 3070
+    ble6             : 3070
+     lut6            : 3054
+      lut            : 3054
+     ff              : 1671
+  memory             : 1
+   mem_1024x32_sp    : 1
+    memory_slice     : 32
+
+# Load packing took 0.22 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+# Create Device
+## Build Device Grid
+FPGA sized to 25 x 25: 625 grid tiles (auto)
+
+Resource usage...
+	Netlist
+		467	blocks of type: io
+	Architecture
+		736	blocks of type: io
+	Netlist
+		365	blocks of type: clb
+	Architecture
+		391	blocks of type: clb
+	Netlist
+		0	blocks of type: mult_36
+	Architecture
+		15	blocks of type: mult_36
+	Netlist
+		1	blocks of type: memory
+	Architecture
+		9	blocks of type: memory
+
+Device Utilization: 0.69 (target 1.00)
+	Physical Tile io:
+	Block Utilization: 0.63 Logical Block: io
+	Physical Tile clb:
+	Block Utilization: 0.93 Logical Block: clb
+	Physical Tile mult_36:
+	Block Utilization: 0.00 Logical Block: mult_36
+	Physical Tile memory:
+	Block Utilization: 0.11 Logical Block: memory
+
+FPGA size limited by block type(s): clb
+
+## Build Device Grid took 0.00 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+## Build routing resource graph
+## Build routing resource graph took 0.21 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+  RR Graph Nodes: 63948
+  RR Graph Edges: 577555
+# Create Device took 0.22 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+
+
+Bounding box mode is Cube
+
+# Compressed grid construction
+# Compressed grid construction took 0.00 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+# Placement
+## Initial Placement
+Initial placement iteration 0 has finished successfully
+## Initial Placement took 0.00 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+Using simple RL 'Softmax agent' for choosing move and block types
+
+BB estimate of min-dist (placement) wire length: 52683
+
+Completed placement consistency check successfully.
+Initial placement cost: 1 bb_cost: 526.826 td_cost: nan
+Placement contains 0 placement macros involving 0 blocks (average macro size -nan)
+
+Moves per temperature: 3918
+
+---- ------ ------- ------- ---------- ---------- ------- ---------- -------- ------- ------- ------ -------- --------- ------
+Tnum   Time       T Av Cost Av BB Cost Av TD Cost     CPD       sTNS     sWNS Ac Rate Std Dev  R lim Crit Exp Tot Moves  Alpha
+      (sec)                                          (ns)       (ns)     (ns)                                                 
+---- ------ ------- ------- ---------- ---------- ------- ---------- -------- ------- ------- ------ -------- --------- ------
+   1    0.0 1.0e-06   0.799     420.68 nan            nan        nan      nan   0.330  0.0890   24.0     0.00      3918  1.000
+   2    0.0 8.0e-07   0.929     332.54 nan            nan        nan      nan   0.210  0.0370   24.0     0.00      7836  1.000
+   3    0.0 6.4e-07   0.955     297.61 nan            nan        nan      nan   0.173  0.0207   24.0     0.00     11754  1.000
+   4    0.0 5.1e-07   0.971     278.67 nan            nan        nan      nan   0.151  0.0153   24.0     0.00     15672  1.000
+   5    0.0 4.1e-07   0.988     268.62 nan            nan        nan      nan   0.128  0.0077   24.0     0.00     19590  1.000
+   6    0.0 3.3e-07   0.986     261.27 nan            nan        nan      nan   0.109  0.0083   24.0     0.00     23508  1.000
+   7    0.0 2.6e-07   0.992     255.92 nan            nan        nan      nan   0.115  0.0052   24.0     0.00     27426  1.000
+   8    0.0 2.1e-07   0.988     250.03 nan            nan        nan      nan   0.116  0.0063   24.0     0.00     31344  1.000
+   9    0.0 1.7e-07   0.985     243.75 nan            nan        nan      nan   0.105  0.0080   24.0     0.00     35262  1.000
+  10    0.0 1.3e-07   0.994     239.57 nan            nan        nan      nan   0.098  0.0037   24.0     0.00     39180  1.000
+  11    0.0 1.1e-07   0.997     237.28 nan            nan        nan      nan   0.095  0.0017   24.0     0.00     43098  1.000
+  12    0.0 0.0e+00   0.998     235.99 nan            nan        nan      nan   0.072  0.0015   24.0     0.00     47016  1.000
+## Placement Quench took 0.00 seconds (max_rss 406.7 MiB)
+
+BB estimate of min-dist (placement) wire length: 23533
+
+Completed placement consistency check successfully.
+
+Swaps called: 47016
+
+Aborted Move Reasons:
+  No moves aborted
+Placement cost: 0.9948, bb_cost: 235.329, td_cost: nan, 
+
+Placement resource usage:
+  io     implemented as io    : 467
+  clb    implemented as clb   : 365
+  memory implemented as memory: 1
+
+Placement number of temperatures: 12
+Placement total # of swap attempts: 47016
+	Swaps accepted:  6664 (14.2 %)
+	Swaps rejected: 40176 (85.5 %)
+	Swaps aborted:   176 ( 0.4 %)
+
+
+Placement perturbation distribution by block and move type: 
+------------------ ----------------- ---------------- ---------------- --------------- ------------ 
+    Block Type         Move Type       (%) of Total      Accepted(%)     Rejected(%)    Aborted(%)
+------------------ ----------------- ---------------- ---------------- --------------- ------------ 
+io                 Uniform                18.98            6.04            93.96          0.00         
+                   Median                 30.11            17.46           81.76          0.78         
+                   Centroid               30.85            17.83           82.17          0.00         
+
+clb                Uniform                2.81             7.56            92.44          0.00         
+                   Median                 10.63            12.61           86.07          1.32         
+                   Centroid               6.37             11.16           88.84          0.00         
+
+memory             Uniform                0.07             3.03            96.97          0.00         
+                   Median                 0.09             2.33            97.67          0.00         
+                   Centroid               0.09             0.00            100.00         0.00         
+
+
+Placement Quench timing analysis took 0 seconds (0 STA, 0 slack) (0 full updates: 0 setup, 0 hold, 0 combined).
+Placement Total  timing analysis took 0 seconds (0 STA, 0 slack) (0 full updates: 0 setup, 0 hold, 0 combined).
+update_td_costs: connections 0 nets 0 sum_nets 0 total 0
+# Placement took 0.06 seconds (max_rss 406.7 MiB, delta_rss +0.0 MiB)
+
+Flow timing analysis took 0.00288752 seconds (0.00234874 STA, 0.000538785 slack) (1 full updates: 1 setup, 0 hold, 0 combined).
+VPR succeeded
+The entire flow of VPR took 1.17 seconds (max_rss 406.7 MiB)
