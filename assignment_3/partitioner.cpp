@@ -119,6 +119,55 @@ int compute_additional_cost(const Circuit& circuit,
     return additional;
 }
 
+// Compute predicted cuts based on balance constraints
+// For nets that have blocks on only ONE side + unassigned blocks:
+// If there's not enough room on that side for all unassigned, net WILL be cut
+int compute_balance_predicted_cuts(const Circuit& circuit,
+                                   const std::vector<Side>& assignment,
+                                   int left_count,
+                                   int right_count) {
+    int half = circuit.num_blocks / 2;
+    int spaces_left = half - left_count;   // remaining spots on LEFT
+    int spaces_right = half - right_count; // remaining spots on RIGHT
+    
+    int predicted_cuts = 0;
+    
+    for (int net_id : circuit.net_ids) {
+        int on_left = 0;
+        int on_right = 0;
+        int unassigned = 0;
+        
+        for (int blk : circuit.net_to_blocks.at(net_id)) {
+            if (assignment[blk] == Side::LEFT) on_left++;
+            else if (assignment[blk] == Side::RIGHT) on_right++;
+            else unassigned++;
+        }
+        
+        // Net already cut - don't double count
+        if (on_left > 0 && on_right > 0) continue;
+        
+        // Net has blocks only on LEFT + some unassigned
+        if (on_left > 0 && on_right == 0 && unassigned > 0) {
+            // For net to be safe, ALL unassigned must go LEFT
+            // If not enough room, at least one must go RIGHT → cut!
+            if (unassigned > spaces_left) {
+                predicted_cuts++;
+            }
+        }
+        
+        // Net has blocks only on RIGHT + some unassigned
+        if (on_right > 0 && on_left == 0 && unassigned > 0) {
+            // For net to be safe, ALL unassigned must go RIGHT
+            // If not enough room, at least one must go LEFT → cut!
+            if (unassigned > spaces_right) {
+                predicted_cuts++;
+            }
+        }
+    }
+    
+    return predicted_cuts;
+}
+
 // Compute initial solution: community-aware greedy
 // Try to keep community pairs together for better starting point
 int compute_initial_solution(const Circuit& circuit,
@@ -229,6 +278,13 @@ void branch_and_bound(const Circuit& circuit,
     
     // Lower bound pruning - now using passed-in current_lb
     if (current_lb >= best_cost) {
+        return;
+    }
+    
+    // Tighter LB: add predicted cuts based on balance constraints
+    int predicted_cuts = compute_balance_predicted_cuts(circuit, assignment, 
+                                                         left_count, right_count);
+    if (current_lb + predicted_cuts >= best_cost) {
         return;
     }
     
