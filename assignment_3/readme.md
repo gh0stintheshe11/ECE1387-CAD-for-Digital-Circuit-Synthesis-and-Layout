@@ -23,7 +23,7 @@ make clean
 - `-f <file>` **(required)**: Input circuit file (e.g., `cct3.txt`)
 - `-t <num_threads>`: Number of threads for parallel execution (default is 1)
   - Use `-t 1` for sequential execution
-  - Use `-t 4`, `-t 8`, `2^n` etc. for parallel execution (I tried up to 128 thread on ECF machine no issue, and it signifiacantly reduced the run time, cct4 with 128 threads finishs in 17s (I stop at 128 not becuase it can't go higher but because at 128 thread, i'm already hoging 100% of the ECF server CPU... I checked using `top` and I'm afrid that go higher will get me in trouble), but lowest run time does not give lowest visited node count. Detailed result in report)
+  - Use `-t 4`, `-t 8`, `2^n` etc. for parallel execution (I tried up to 128 thread on ECF machine no issue, and it signifiacantly reduced the run time, cct4 with 128 threads finishs in 17s (I stop at 128 not becuase it can't go higher but because at 128 thread, i'm already hoging 100% of the ECF server CPU... I checked using `top` and I'm afrid that going even higher will get me in trouble), but lowest run time does not give lowest visited node count. At some point, more threads give more overhead than lower threads on visited node count. Detailed result in report)
 - `-g` (optional): Enable GUI visualization of the decision tree
   - Automatically sets `-t 1` (graphics requires sequential mode, a thread safe node recording is complex, I give up)
 
