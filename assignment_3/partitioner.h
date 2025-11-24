@@ -6,7 +6,8 @@
 #include <map>
 
 // Main function to run branch and bound partitioner
-PartitionResult partition(const Circuit& circuit);
+// num_threads: 1 = sequential, 2 or 4 = parallel
+PartitionResult partition(const Circuit& circuit, int num_threads = 4);
 
 // Build a map from block_id to its community partners
 std::map<int, std::vector<int>> build_community_map(const Circuit& circuit);
@@ -14,7 +15,7 @@ std::map<int, std::vector<int>> build_community_map(const Circuit& circuit);
 // Sort blocks by fanout (descending) - the hint from assignment
 std::vector<int> sort_blocks_by_fanout(const Circuit& circuit);
 
-// Compute initial solution (first half left, second half right)
+// Compute initial solution (community-aware greedy)
 int compute_initial_solution(const Circuit& circuit, 
                              const std::vector<int>& block_order,
                              PartitionResult& result);
@@ -35,7 +36,13 @@ int compute_additional_cost(const Circuit& circuit,
                             int blk,
                             Side side);
 
-// Recursive branch and bound function
+// Compute predicted cuts based on balance constraints (full computation)
+int compute_balance_predicted_cuts(const Circuit& circuit,
+                                   const std::vector<Side>& assignment,
+                                   int left_count,
+                                   int right_count);
+
+// Recursive branch and bound function (DFS)
 void branch_and_bound(const Circuit& circuit,
                       const std::vector<int>& block_order,
                       const std::map<int, std::vector<int>>& community_map,
@@ -43,7 +50,7 @@ void branch_and_bound(const Circuit& circuit,
                       int depth,
                       int left_count,
                       int right_count,
-                      int current_lb,  // current lower bound (passed down)
+                      int current_lb,
                       int& best_cost,
                       PartitionResult& best_result,
                       int& nodes_visited);

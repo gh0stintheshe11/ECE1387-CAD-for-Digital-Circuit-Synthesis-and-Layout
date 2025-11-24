@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra
+CXXFLAGS = -std=c++17 -Wall -Wextra -pthread
 
 TARGET = partitioner
 OBJS = main.o parser.o partitioner.o

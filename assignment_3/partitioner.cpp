@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <iostream>
 #include <climits>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 // Build a map from block_id to its community partners
 std::map<int, std::vector<int>> build_community_map(const Circuit& circuit) {
@@ -287,7 +290,7 @@ int compute_initial_solution(const Circuit& circuit,
     return result.total_cost;
 }
 
-// Recursive branch and bound
+// Recursive branch and bound (DFS)
 void branch_and_bound(const Circuit& circuit,
                       const std::vector<int>& block_order,
                       const std::map<int, std::vector<int>>& community_map,
@@ -295,7 +298,7 @@ void branch_and_bound(const Circuit& circuit,
                       int depth,
                       int left_count,
                       int right_count,
-                      int current_lb,  // NEW: pass current lower bound down
+                      int current_lb,
                       int& best_cost,
                       PartitionResult& best_result,
                       int& nodes_visited) {
@@ -320,8 +323,8 @@ void branch_and_bound(const Circuit& circuit,
         return;
     }
     
-    // Tighter LB: add predicted cuts based on balance constraints
-    int predicted_cuts = compute_balance_predicted_cuts(circuit, assignment, 
+    // Tighter LB: compute predicted cuts (full computation - worth it for pruning)
+    int predicted_cuts = compute_balance_predicted_cuts(circuit, assignment,
                                                          left_count, right_count);
     if (current_lb + predicted_cuts >= best_cost) {
         return;
@@ -384,7 +387,7 @@ void branch_and_bound(const Circuit& circuit,
         }
     }
     
-    // Try first side - compute additional cost incrementally
+    // Try first side - compute costs incrementally
     assignment[blk] = first_side;
     int additional_first = compute_additional_cost(circuit, assignment, community_map, blk, first_side);
     if (first_side == Side::LEFT) {
@@ -399,7 +402,7 @@ void branch_and_bound(const Circuit& circuit,
                          best_cost, best_result, nodes_visited);
     }
     
-    // Try second side - compute additional cost incrementally
+    // Try second side - compute costs incrementally
     assignment[blk] = second_side;
     int additional_second = compute_additional_cost(circuit, assignment, community_map, blk, second_side);
     if (second_side == Side::LEFT) {
@@ -418,9 +421,134 @@ void branch_and_bound(const Circuit& circuit,
     assignment[blk] = Side::UNASSIGNED;
 }
 
+// Parallel version of branch and bound
+// Uses atomic best_cost for thread-safe pruning
+void branch_and_bound_parallel(const Circuit& circuit,
+                               const std::vector<int>& block_order,
+                               const std::map<int, std::vector<int>>& community_map,
+                               std::vector<Side> assignment,  // COPY - each thread has own copy
+                               int depth,
+                               int left_count,
+                               int right_count,
+                               int current_lb,
+                               std::atomic<int>& best_cost,
+                               PartitionResult& best_result,
+                               std::mutex& result_mutex,
+                               std::atomic<int>& nodes_visited) {
+    
+    nodes_visited++;
+    
+    int half = circuit.num_blocks / 2;
+    int remaining = circuit.num_blocks - depth;
+    
+    // Balance pruning
+    if (left_count > half || right_count > half) {
+        return;
+    }
+    if (left_count + remaining < half || right_count + remaining < half) {
+        return;
+    }
+    
+    // LB pruning - read atomic best_cost
+    if (current_lb >= best_cost.load()) {
+        return;
+    }
+    
+    // Tighter LB with prediction
+    int predicted_cuts = compute_balance_predicted_cuts(circuit, assignment,
+                                                         left_count, right_count);
+    if (current_lb + predicted_cuts >= best_cost.load()) {
+        return;
+    }
+    
+    // Leaf node
+    if (depth == circuit.num_blocks) {
+        // Use mutex for updating best_result
+        std::lock_guard<std::mutex> lock(result_mutex);
+        
+        // Double-check inside lock (another thread might have updated)
+        if (current_lb < best_cost.load()) {
+            best_cost.store(current_lb);
+            
+            best_result.left_partition.clear();
+            best_result.right_partition.clear();
+            
+            for (int blk : circuit.block_ids) {
+                if (assignment[blk] == Side::LEFT) {
+                    best_result.left_partition.insert(blk);
+                } else {
+                    best_result.right_partition.insert(blk);
+                }
+            }
+            
+            best_result.crossing_count = compute_crossing_count(circuit, assignment);
+            best_result.community_cost = compute_community_cost(circuit, assignment);
+            best_result.total_cost = current_lb;
+            
+            std::cout << "  Found better solution: " << current_lb
+                      << " (crossing: " << best_result.crossing_count 
+                      << ", community: " << best_result.community_cost << ")" << std::endl;
+        }
+        return;
+    }
+    
+    // Get next block to assign
+    int blk = block_order[depth];
+    
+    // Determine branching order based on community partners
+    Side first_side = Side::LEFT;
+    Side second_side = Side::RIGHT;
+    
+    auto it = community_map.find(blk);
+    if (it != community_map.end()) {
+        for (int partner : it->second) {
+            if (assignment[partner] == Side::LEFT) {
+                first_side = Side::LEFT;
+                second_side = Side::RIGHT;
+                break;
+            } else if (assignment[partner] == Side::RIGHT) {
+                first_side = Side::RIGHT;
+                second_side = Side::LEFT;
+                break;
+            }
+        }
+    }
+    
+    // Try first side
+    assignment[blk] = first_side;
+    int additional_first = compute_additional_cost(circuit, assignment, community_map, blk, first_side);
+    if (first_side == Side::LEFT) {
+        branch_and_bound_parallel(circuit, block_order, community_map, assignment, depth + 1,
+                                  left_count + 1, right_count,
+                                  current_lb + additional_first,
+                                  best_cost, best_result, result_mutex, nodes_visited);
+    } else {
+        branch_and_bound_parallel(circuit, block_order, community_map, assignment, depth + 1,
+                                  left_count, right_count + 1,
+                                  current_lb + additional_first,
+                                  best_cost, best_result, result_mutex, nodes_visited);
+    }
+    
+    // Try second side
+    assignment[blk] = second_side;
+    int additional_second = compute_additional_cost(circuit, assignment, community_map, blk, second_side);
+    if (second_side == Side::LEFT) {
+        branch_and_bound_parallel(circuit, block_order, community_map, assignment, depth + 1,
+                                  left_count + 1, right_count,
+                                  current_lb + additional_second,
+                                  best_cost, best_result, result_mutex, nodes_visited);
+    } else {
+        branch_and_bound_parallel(circuit, block_order, community_map, assignment, depth + 1,
+                                  left_count, right_count + 1,
+                                  current_lb + additional_second,
+                                  best_cost, best_result, result_mutex, nodes_visited);
+    }
+}
+
 // Main partition function
-PartitionResult partition(const Circuit& circuit) {
+PartitionResult partition(const Circuit& circuit, int num_threads) {
     std::cout << "\n=== Branch and Bound Partitioner ===" << std::endl;
+    std::cout << "Using " << num_threads << " thread(s)" << std::endl;
     
     // Step 1: Sort blocks by fanout (the hint)
     std::vector<int> block_order = sort_blocks_by_fanout(circuit);
@@ -434,42 +562,103 @@ PartitionResult partition(const Circuit& circuit) {
     
     // Step 2: Compute initial solution
     PartitionResult best_result;
-    int best_cost = compute_initial_solution(circuit, block_order, best_result);
+    int initial_cost = compute_initial_solution(circuit, block_order, best_result);
     
-    std::cout << "Initial solution cost: " << best_cost
+    std::cout << "Initial solution cost: " << initial_cost
               << " (crossing: " << best_result.crossing_count
               << ", community: " << best_result.community_cost << ")" << std::endl;
     
     // Step 3: Set up for branch and bound
     int max_block_id = *std::max_element(circuit.block_ids.begin(),
                                           circuit.block_ids.end());
-    std::vector<Side> assignment(max_block_id + 1, Side::UNASSIGNED);
-    int nodes_visited = 0;
-    
-    // Build community map for efficient partner lookup
     std::map<int, std::vector<int>> community_map = build_community_map(circuit);
     
     // Fix first block to LEFT (symmetry breaking)
     int first_blk = block_order[0];
-    assignment[first_blk] = Side::LEFT;
     
     std::cout << "Starting B&B (block " << first_blk << " fixed to LEFT)..." << std::endl;
     
-    // Step 4: Run branch and bound starting from depth 1
-    // Initial LB = 0 (first block assigned, no cuts possible yet)
-    branch_and_bound(circuit, block_order, community_map, assignment, 1,
-                     1, 0,  // left_count=1 since first block is LEFT
-                     0,     // current_lb starts at 0
-                     best_cost, best_result, nodes_visited);
+    // Create base assignment with first block fixed to LEFT
+    std::vector<Side> base_assignment(max_block_id + 1, Side::UNASSIGNED);
+    base_assignment[first_blk] = Side::LEFT;
     
-    // Step 5: Done
-    best_result.nodes_visited = nodes_visited;
-    
-    std::cout << "\n=== Final Result ===" << std::endl;
-    std::cout << "Optimal cost: " << best_result.total_cost << std::endl;
-    std::cout << "  Crossing count: " << best_result.crossing_count << std::endl;
-    std::cout << "  Community cost: " << best_result.community_cost << std::endl;
-    std::cout << "Nodes visited: " << nodes_visited << std::endl;
+    if (num_threads == 1) {
+        // Sequential version
+        int best_cost = initial_cost;
+        int nodes_visited = 0;
+        
+        branch_and_bound(circuit, block_order, community_map, base_assignment, 1,
+                         1, 0, 0, best_cost, best_result, nodes_visited);
+        
+        best_result.nodes_visited = nodes_visited;
+        
+        std::cout << "\n=== Final Result ===" << std::endl;
+        std::cout << "Optimal cost: " << best_result.total_cost << std::endl;
+        std::cout << "  Crossing count: " << best_result.crossing_count << std::endl;
+        std::cout << "  Community cost: " << best_result.community_cost << std::endl;
+        std::cout << "Nodes visited: " << nodes_visited << std::endl;
+        
+    } else {
+        // Parallel version - supports any power of 2
+        std::atomic<int> best_cost(initial_cost);
+        std::atomic<int> nodes_visited(0);
+        std::mutex result_mutex;
+        
+        // Calculate how many blocks to pre-assign: log2(num_threads)
+        int depth = 0;
+        int temp = num_threads;
+        while (temp > 1) {
+            depth++;
+            temp /= 2;
+        }
+        // depth = number of blocks to pre-assign (after first block)
+        // starting depth for B&B = depth + 1 (since first block is already assigned)
+        
+        std::vector<std::thread> threads;
+        
+        // Spawn num_threads threads, each with unique combination
+        for (int thread_id = 0; thread_id < num_threads; thread_id++) {
+            threads.emplace_back([&, thread_id]() {
+                std::vector<Side> assignment = base_assignment;
+                int left_count = 1;  // First block is LEFT
+                int right_count = 0;
+                int current_cost = 0;
+                
+                // Assign blocks based on bits of thread_id
+                for (int bit = 0; bit < depth; bit++) {
+                    int blk = block_order[bit + 1];  // +1 because block_order[0] is already assigned
+                    Side side = ((thread_id >> bit) & 1) ? Side::RIGHT : Side::LEFT;
+                    
+                    assignment[blk] = side;
+                    current_cost += compute_additional_cost(circuit, assignment, community_map, blk, side);
+                    
+                    if (side == Side::LEFT) {
+                        left_count++;
+                    } else {
+                        right_count++;
+                    }
+                }
+                
+                // Start B&B from depth+1
+                branch_and_bound_parallel(circuit, block_order, community_map, assignment, depth + 1,
+                                          left_count, right_count, current_cost,
+                                          best_cost, best_result, result_mutex, nodes_visited);
+            });
+        }
+        
+        // Wait for all threads
+        for (auto& t : threads) {
+            t.join();
+        }
+        
+        best_result.nodes_visited = nodes_visited.load();
+        
+        std::cout << "\n=== Final Result ===" << std::endl;
+        std::cout << "Optimal cost: " << best_result.total_cost << std::endl;
+        std::cout << "  Crossing count: " << best_result.crossing_count << std::endl;
+        std::cout << "  Community cost: " << best_result.community_cost << std::endl;
+        std::cout << "Nodes visited: " << nodes_visited.load() << std::endl;
+    }
     
     return best_result;
 }
