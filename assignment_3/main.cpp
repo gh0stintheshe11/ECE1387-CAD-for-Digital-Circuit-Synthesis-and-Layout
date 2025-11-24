@@ -4,11 +4,13 @@
 #include <cstring>
 #include "parser.h"
 #include "partitioner.h"
+#include "graphics.h"
 
 void print_usage(const char* prog_name) {
-    std::cerr << "Usage: " << prog_name << " -f <circuit_file> [-t num_threads]" << std::endl;
+    std::cerr << "Usage: " << prog_name << " -f <circuit_file> [-t num_threads] [-g]" << std::endl;
     std::cerr << "  -f circuit_file : input circuit file (required)" << std::endl;
     std::cerr << "  -t num_threads  : power of 2 (1, 2, 4, 8, 16, ...), default: 4" << std::endl;
+    std::cerr << "  -g              : show graphics visualization (requires -t 1)" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -19,6 +21,7 @@ int main(int argc, char* argv[]) {
     
     std::string filename;
     int num_threads = 4;  // Default
+    bool show_graphics = false;
     
     // Parse arguments
     int i = 1;
@@ -39,6 +42,9 @@ int main(int argc, char* argv[]) {
             }
             num_threads = std::stoi(argv[i + 1]);
             i += 2;
+        } else if (strcmp(argv[i], "-g") == 0) {
+            show_graphics = true;
+            i += 1;
         } else {
             std::cerr << "Error: Unknown option " << argv[i] << std::endl;
             print_usage(argv[0]);
@@ -57,6 +63,15 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: num_threads must be a power of 2 (1, 2, 4, 8, 16, ...)" << std::endl;
         return 1;
     }
+    
+    // Graphics requires sequential mode
+    if (show_graphics && num_threads != 1) {
+        std::cerr << "Warning: Graphics requires sequential mode. Setting -t 1" << std::endl;
+        num_threads = 1;
+    }
+    
+    // Enable graphics recording if requested
+    g_graphics_enabled = show_graphics;
     
     // Parse circuit
     std::cout << "Parsing circuit file: " << filename << std::endl;
@@ -87,6 +102,11 @@ int main(int argc, char* argv[]) {
         std::cout << blk << " ";
     }
     std::cout << std::endl;
+    
+    // Launch graphics if requested
+    if (show_graphics) {
+        run_graphics(filename, result.total_cost, result.nodes_visited);
+    }
     
     return 0;
 }

@@ -43,6 +43,8 @@ int compute_balance_predicted_cuts(const Circuit& circuit,
                                    int right_count);
 
 // Recursive branch and bound function (DFS)
+// x_position: horizontal position in tree (0.0 to 1.0)
+// parent_index: index of parent node in g_tree_nodes (-1 for root)
 void branch_and_bound(const Circuit& circuit,
                       const std::vector<int>& block_order,
                       const std::map<int, std::vector<int>>& community_map,
@@ -53,6 +55,8 @@ void branch_and_bound(const Circuit& circuit,
                       int current_lb,
                       int& best_cost,
                       PartitionResult& best_result,
-                      int& nodes_visited);
+                      int& nodes_visited,
+                      double x_position = 0.5,
+                      int parent_index = -1);
 
 #endif // PARTITIONER_H

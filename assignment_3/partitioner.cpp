@@ -1,7 +1,9 @@
 #include "partitioner.h"
+#include "graphics.h"
 #include <algorithm>
 #include <iostream>
 #include <climits>
+#include <cmath>
 #include <thread>
 #include <atomic>
 #include <mutex>
@@ -68,7 +70,7 @@ int compute_community_cost(const Circuit& circuit,
     return cost;
 }
 
-// Compute ADDITIONAL cost when assigning block blk to side
+// compute additional cost when assigning block blk to side
 // Only checks nets connected to blk and community pairs involving blk
 int compute_additional_cost(const Circuit& circuit,
                             const std::vector<Side>& assignment,
@@ -290,7 +292,7 @@ int compute_initial_solution(const Circuit& circuit,
     return result.total_cost;
 }
 
-// Recursive branch and bound (DFS)
+// Recursive branch and bound (DFS) with graphics support
 void branch_and_bound(const Circuit& circuit,
                       const std::vector<int>& block_order,
                       const std::map<int, std::vector<int>>& community_map,
@@ -301,25 +303,35 @@ void branch_and_bound(const Circuit& circuit,
                       int current_lb,
                       int& best_cost,
                       PartitionResult& best_result,
-                      int& nodes_visited) {
+                      int& nodes_visited,
+                      double x_position,
+                      int parent_index) {
     
     nodes_visited++;
+    
+    // Record this node for graphics
+    int blk_id = (depth > 0) ? block_order[depth - 1] : -1;
+    Side side = (depth > 0 && blk_id >= 0) ? assignment[blk_id] : Side::UNASSIGNED;
+    int my_index = record_tree_node(depth, blk_id, side, x_position, parent_index);
     
     int half = circuit.num_blocks / 2;
     int remaining = circuit.num_blocks - depth;
     
     // Balance pruning: can't exceed half on either side
     if (left_count > half || right_count > half) {
+        mark_node_pruned(my_index);
         return;
     }
     
     // Balance pruning: check if we can still achieve balance
     if (left_count + remaining < half || right_count + remaining < half) {
+        mark_node_pruned(my_index);
         return;
     }
     
     // Lower bound pruning - now using passed-in current_lb
     if (current_lb >= best_cost) {
+        mark_node_pruned(my_index);
         return;
     }
     
@@ -327,6 +339,7 @@ void branch_and_bound(const Circuit& circuit,
     int predicted_cuts = compute_balance_predicted_cuts(circuit, assignment,
                                                          left_count, right_count);
     if (current_lb + predicted_cuts >= best_cost) {
+        mark_node_pruned(my_index);
         return;
     }
     
@@ -335,6 +348,7 @@ void branch_and_bound(const Circuit& circuit,
     if (depth == circuit.num_blocks) {
         if (current_lb < best_cost) {
             best_cost = current_lb;
+            mark_node_solution(my_index);
             
             // Update best result
             best_result.left_partition.clear();
@@ -387,34 +401,46 @@ void branch_and_bound(const Circuit& circuit,
         }
     }
     
+    // Calculate x offset for children
+    // Standard binary tree positioning: offset halves at each level
+    double x_offset = std::pow(0.5, depth + 2);  // 0.25, 0.125, 0.0625, ...
+    
     // Try first side - compute costs incrementally
     assignment[blk] = first_side;
     int additional_first = compute_additional_cost(circuit, assignment, community_map, blk, first_side);
+    double child1_x = (first_side == Side::LEFT) ? (x_position - x_offset) : (x_position + x_offset);
+    
     if (first_side == Side::LEFT) {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count + 1, right_count,
                          current_lb + additional_first,
-                         best_cost, best_result, nodes_visited);
+                         best_cost, best_result, nodes_visited,
+                         child1_x, my_index);
     } else {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count, right_count + 1,
                          current_lb + additional_first,
-                         best_cost, best_result, nodes_visited);
+                         best_cost, best_result, nodes_visited,
+                         child1_x, my_index);
     }
     
     // Try second side - compute costs incrementally
     assignment[blk] = second_side;
     int additional_second = compute_additional_cost(circuit, assignment, community_map, blk, second_side);
+    double child2_x = (second_side == Side::LEFT) ? (x_position - x_offset) : (x_position + x_offset);
+    
     if (second_side == Side::LEFT) {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count + 1, right_count,
                          current_lb + additional_second,
-                         best_cost, best_result, nodes_visited);
+                         best_cost, best_result, nodes_visited,
+                         child2_x, my_index);
     } else {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count, right_count + 1,
                          current_lb + additional_second,
-                         best_cost, best_result, nodes_visited);
+                         best_cost, best_result, nodes_visited,
+                         child2_x, my_index);
     }
     
     // Restore (backtrack)
@@ -582,13 +608,22 @@ PartitionResult partition(const Circuit& circuit, int num_threads) {
     std::vector<Side> base_assignment(max_block_id + 1, Side::UNASSIGNED);
     base_assignment[first_blk] = Side::LEFT;
     
+    // Set up for graphics (if enabled)
+    clear_tree_nodes();
+    g_block_order = block_order;
+    
     if (num_threads == 1) {
         // Sequential version
         int best_cost = initial_cost;
         int nodes_visited = 0;
         
+        // Record root node (first block fixed to LEFT)
+        int root_idx = record_tree_node(0, first_blk, Side::LEFT, 0.5, -1);
+        (void)root_idx;  // Suppress unused warning
+        
         branch_and_bound(circuit, block_order, community_map, base_assignment, 1,
-                         1, 0, 0, best_cost, best_result, nodes_visited);
+                         1, 0, 0, best_cost, best_result, nodes_visited,
+                         0.5, 0);  // x_position=0.5, parent=root
         
         best_result.nodes_visited = nodes_visited;
         
