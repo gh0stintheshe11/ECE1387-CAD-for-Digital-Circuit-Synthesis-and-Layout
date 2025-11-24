@@ -1,0 +1,37 @@
+Parsing circuit file: cct4.txt
+=== Circuit Summary ===
+Blocks: 48
+Nets: 75
+Community pairs: 14
+Total pins: 559
+Max block fanout: 19
+Max net degree: 13
+
+=== Branch and Bound Partitioner ===
+Using 32 thread(s)
+Blocks sorted by fanout (top 5):
+  Block 43 (fanout: 19)
+  Block 5 (fanout: 18)
+  Block 38 (fanout: 17)
+  Block 30 (fanout: 17)
+  Block 16 (fanout: 17)
+Initial solution cost: 70 (crossing: 69, community: 1)
+Starting B&B (block 43 fixed to LEFT)...
+  Found better solution: 69 (crossing: 66, community: 3)
+  Found better solution: 68 (crossing: 64, community: 4)
+  Found better solution: 67 (crossing: 65, community: 2)
+  Found better solution: 66 (crossing: 64, community: 2)
+  Found better solution: 65 (crossing: 61, community: 4)
+  Found better solution: 64 (crossing: 64, community: 0)
+  Found better solution: 63 (crossing: 63, community: 0)
+  Found better solution: 62 (crossing: 62, community: 0)
+
+=== Final Result ===
+Optimal cost: 62
+  Crossing count: 62
+  Community cost: 0
+Nodes visited: 88890504
+Runtime: 30735 ms
+
+Left partition (24 blocks): 1 4 5 6 8 13 14 15 16 19 20 21 22 24 25 26 34 36 38 41 42 43 44 46 
+Right partition (24 blocks): 2 3 7 9 10 11 12 17 18 23 27 28 29 30 31 32 33 35 37 39 40 45 47 48 

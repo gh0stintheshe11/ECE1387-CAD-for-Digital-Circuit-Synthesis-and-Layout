@@ -1,0 +1,30 @@
+Parsing circuit file: cct1.txt
+=== Circuit Summary ===
+Blocks: 10
+Nets: 15
+Community pairs: 2
+Total pins: 60
+Max block fanout: 10
+Max net degree: 6
+
+=== Branch and Bound Partitioner ===
+Using 32 thread(s)
+Blocks sorted by fanout (top 5):
+  Block 7 (fanout: 10)
+  Block 1 (fanout: 7)
+  Block 3 (fanout: 7)
+  Block 4 (fanout: 7)
+  Block 5 (fanout: 7)
+Initial solution cost: 11 (crossing: 11, community: 0)
+Starting B&B (block 7 fixed to LEFT)...
+  Found better solution: 10 (crossing: 10, community: 0)
+
+=== Final Result ===
+Optimal cost: 10
+  Crossing count: 10
+  Community cost: 0
+Nodes visited: 42
+Runtime: 5 ms
+
+Left partition (5 blocks): 1 3 5 7 8 
+Right partition (5 blocks): 2 4 6 9 10 
