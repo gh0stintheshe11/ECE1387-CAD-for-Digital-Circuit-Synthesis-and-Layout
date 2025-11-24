@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     }
     
     std::string filename;
-    int num_threads = 4;  // Default
+    int num_threads = 1;  // Default
     bool show_graphics = false;
     
     // Parse arguments

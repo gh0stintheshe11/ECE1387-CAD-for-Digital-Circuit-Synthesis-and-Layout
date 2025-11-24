@@ -6,8 +6,8 @@
 #include <map>
 
 // Main function to run branch and bound partitioner
-// num_threads: 1 = sequential, 2 or 4 = parallel
-PartitionResult partition(const Circuit& circuit, int num_threads = 4);
+// num_threads:
+PartitionResult partition(const Circuit& circuit, int num_threads);
 
 // Build a map from block_id to its community partners
 std::map<int, std::vector<int>> build_community_map(const Circuit& circuit);
