@@ -119,25 +119,74 @@ int compute_additional_cost(const Circuit& circuit,
     return additional;
 }
 
-// Compute initial solution: first half LEFT, second half RIGHT
+// Compute initial solution: community-aware greedy
+// Try to keep community pairs together for better starting point
 int compute_initial_solution(const Circuit& circuit,
                              const std::vector<int>& block_order,
                              PartitionResult& result) {
     int half = circuit.num_blocks / 2;
     
-    // Create assignment array (index by block_id, need max block id + 1)
+    // Create assignment array
     int max_block_id = *std::max_element(circuit.block_ids.begin(), 
                                           circuit.block_ids.end());
     std::vector<Side> assignment(max_block_id + 1, Side::UNASSIGNED);
     
-    // Assign first half to LEFT, second half to RIGHT
-    for (int i = 0; i < (int)block_order.size(); i++) {
-        int blk = block_order[i];
-        if (i < half) {
-            assignment[blk] = Side::LEFT;
+    int left_count = 0;
+    int right_count = 0;
+    
+    // Step 1: Assign community pairs together
+    // Alternate sides to keep balance
+    bool next_side_left = true;
+    
+    for (const auto& [blk_i, blk_j] : circuit.community_pairs) {
+        // Skip if either block already assigned
+        if (assignment[blk_i] != Side::UNASSIGNED || 
+            assignment[blk_j] != Side::UNASSIGNED) {
+            continue;
+        }
+        
+        // Check if we can fit both on the preferred side
+        if (next_side_left && left_count + 2 <= half) {
+            assignment[blk_i] = Side::LEFT;
+            assignment[blk_j] = Side::LEFT;
+            left_count += 2;
+            next_side_left = false;  // alternate
+        } else if (!next_side_left && right_count + 2 <= half) {
+            assignment[blk_i] = Side::RIGHT;
+            assignment[blk_j] = Side::RIGHT;
+            right_count += 2;
+            next_side_left = true;  // alternate
+        } else if (left_count + 2 <= half) {
+            // Fallback to whichever side has room
+            assignment[blk_i] = Side::LEFT;
+            assignment[blk_j] = Side::LEFT;
+            left_count += 2;
+        } else if (right_count + 2 <= half) {
+            assignment[blk_i] = Side::RIGHT;
+            assignment[blk_j] = Side::RIGHT;
+            right_count += 2;
+        }
+        // If neither side has room for both, leave for later
+    }
+    
+    // Step 2: Assign remaining blocks (follow fanout order)
+    for (int blk : block_order) {
+        if (assignment[blk] == Side::UNASSIGNED) {
+            if (left_count < half) {
+                assignment[blk] = Side::LEFT;
+                left_count++;
+            } else {
+                assignment[blk] = Side::RIGHT;
+                right_count++;
+            }
+        }
+    }
+    
+    // Build result sets
+    for (int blk : circuit.block_ids) {
+        if (assignment[blk] == Side::LEFT) {
             result.left_partition.insert(blk);
         } else {
-            assignment[blk] = Side::RIGHT;
             result.right_partition.insert(blk);
         }
     }
