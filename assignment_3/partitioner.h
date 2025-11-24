@@ -27,9 +27,13 @@ int compute_crossing_count(const Circuit& circuit,
 int compute_community_cost(const Circuit& circuit,
                            const std::vector<Side>& assignment);
 
-// Lower bound function - returns lower bound on cost for partial assignment
-int lower_bound(const Circuit& circuit,
-                const std::vector<Side>& assignment);
+// Compute ADDITIONAL cost when assigning a specific block to a side
+// Only checks nets connected to that block (incremental LB)
+int compute_additional_cost(const Circuit& circuit,
+                            const std::vector<Side>& assignment,
+                            const std::map<int, std::vector<int>>& community_map,
+                            int blk,
+                            Side side);
 
 // Recursive branch and bound function
 void branch_and_bound(const Circuit& circuit,
@@ -39,6 +43,7 @@ void branch_and_bound(const Circuit& circuit,
                       int depth,
                       int left_count,
                       int right_count,
+                      int current_lb,  // current lower bound (passed down)
                       int& best_cost,
                       PartitionResult& best_result,
                       int& nodes_visited);

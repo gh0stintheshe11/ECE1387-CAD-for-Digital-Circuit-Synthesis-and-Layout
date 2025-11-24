@@ -65,42 +65,58 @@ int compute_community_cost(const Circuit& circuit,
     return cost;
 }
 
-// Lower bound function - simple version
-// Counts nets already cut + community pairs already split
-int lower_bound(const Circuit& circuit,
-                const std::vector<Side>& assignment) {
-    int lb_crossing = 0;
-    int lb_community = 0;
+// Compute ADDITIONAL cost when assigning block blk to side
+// Only checks nets connected to blk and community pairs involving blk
+int compute_additional_cost(const Circuit& circuit,
+                            const std::vector<Side>& assignment,
+                            const std::map<int, std::vector<int>>& community_map,
+                            int blk,
+                            Side side) {
+    int additional = 0;
     
-    // Count nets that are already cut
-    for (int net_id : circuit.net_ids) {
-        bool has_left = false;
-        bool has_right = false;
-        
-        for (int blk : circuit.net_to_blocks.at(net_id)) {
-            if (assignment[blk] == Side::LEFT) has_left = true;
-            if (assignment[blk] == Side::RIGHT) has_right = true;
+    // Check nets connected to this block
+    // A net becomes cut if it now has blocks on both sides
+    Side opposite = (side == Side::LEFT) ? Side::RIGHT : Side::LEFT;
+    
+    for (int net_id : circuit.block_to_nets.at(blk)) {
+        // Check if this net already has a block on the opposite side
+        bool has_opposite = false;
+        for (int other_blk : circuit.net_to_blocks.at(net_id)) {
+            if (assignment[other_blk] == opposite) {
+                has_opposite = true;
+                break;
+            }
         }
         
-        if (has_left && has_right) {
-            lb_crossing++;
-        }
-    }
-    
-    // Count community pairs that are already split
-    for (const auto& [blk_i, blk_j] : circuit.community_pairs) {
-        Side side_i = assignment[blk_i];
-        Side side_j = assignment[blk_j];
-        
-        // Only count if both assigned and in different partitions
-        if (side_i != Side::UNASSIGNED && side_j != Side::UNASSIGNED) {
-            if (side_i != side_j) {
-                lb_community++;
+        // If net has block on opposite side, assigning blk to 'side' cuts it
+        // But only count if it wasn't already cut!
+        if (has_opposite) {
+            // Check if this net was already cut (had blocks on 'side' too)
+            bool was_already_cut = false;
+            for (int other_blk : circuit.net_to_blocks.at(net_id)) {
+                if (other_blk != blk && assignment[other_blk] == side) {
+                    was_already_cut = true;
+                    break;
+                }
+            }
+            if (!was_already_cut) {
+                additional++;  // This assignment newly cuts this net
             }
         }
     }
     
-    return lb_crossing + lb_community;
+    // Check community pairs involving this block
+    auto it = community_map.find(blk);
+    if (it != community_map.end()) {
+        for (int partner : it->second) {
+            // If partner is assigned to opposite side, this pair is split
+            if (assignment[partner] == opposite) {
+                additional++;
+            }
+        }
+    }
+    
+    return additional;
 }
 
 // Compute initial solution: first half LEFT, second half RIGHT
@@ -142,6 +158,7 @@ void branch_and_bound(const Circuit& circuit,
                       int depth,
                       int left_count,
                       int right_count,
+                      int current_lb,  // NEW: pass current lower bound down
                       int& best_cost,
                       PartitionResult& best_result,
                       int& nodes_visited) {
@@ -161,20 +178,16 @@ void branch_and_bound(const Circuit& circuit,
         return;
     }
     
-    // Lower bound pruning
-    int lb = lower_bound(circuit, assignment);
-    if (lb >= best_cost) {
+    // Lower bound pruning - now using passed-in current_lb
+    if (current_lb >= best_cost) {
         return;
     }
     
     // Base case: all blocks assigned (leaf node)
+    // At leaf, current_lb IS the actual cost (we computed it incrementally)
     if (depth == circuit.num_blocks) {
-        int crossing = compute_crossing_count(circuit, assignment);
-        int community = compute_community_cost(circuit, assignment);
-        int total = crossing + community;
-        
-        if (total < best_cost) {
-            best_cost = total;
+        if (current_lb < best_cost) {
+            best_cost = current_lb;
             
             // Update best result
             best_result.left_partition.clear();
@@ -188,13 +201,14 @@ void branch_and_bound(const Circuit& circuit,
                 }
             }
             
-            best_result.crossing_count = crossing;
-            best_result.community_cost = community;
-            best_result.total_cost = total;
+            // Compute actual crossing/community for reporting
+            best_result.crossing_count = compute_crossing_count(circuit, assignment);
+            best_result.community_cost = compute_community_cost(circuit, assignment);
+            best_result.total_cost = current_lb;
             
-            std::cout << "  Found better solution: " << total
-                      << " (crossing: " << crossing 
-                      << ", community: " << community << ")" << std::endl;
+            std::cout << "  Found better solution: " << current_lb
+                      << " (crossing: " << best_result.crossing_count 
+                      << ", community: " << best_result.community_cost << ")" << std::endl;
         }
         return;
     }
@@ -226,27 +240,33 @@ void branch_and_bound(const Circuit& circuit,
         }
     }
     
-    // Try first side
+    // Try first side - compute additional cost incrementally
     assignment[blk] = first_side;
+    int additional_first = compute_additional_cost(circuit, assignment, community_map, blk, first_side);
     if (first_side == Side::LEFT) {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count + 1, right_count,
+                         current_lb + additional_first,
                          best_cost, best_result, nodes_visited);
     } else {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count, right_count + 1,
+                         current_lb + additional_first,
                          best_cost, best_result, nodes_visited);
     }
     
-    // Try second side
+    // Try second side - compute additional cost incrementally
     assignment[blk] = second_side;
+    int additional_second = compute_additional_cost(circuit, assignment, community_map, blk, second_side);
     if (second_side == Side::LEFT) {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count + 1, right_count,
+                         current_lb + additional_second,
                          best_cost, best_result, nodes_visited);
     } else {
         branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
                          left_count, right_count + 1,
+                         current_lb + additional_second,
                          best_cost, best_result, nodes_visited);
     }
     
@@ -292,8 +312,10 @@ PartitionResult partition(const Circuit& circuit) {
     std::cout << "Starting B&B (block " << first_blk << " fixed to LEFT)..." << std::endl;
     
     // Step 4: Run branch and bound starting from depth 1
+    // Initial LB = 0 (first block assigned, no cuts possible yet)
     branch_and_bound(circuit, block_order, community_map, assignment, 1,
                      1, 0,  // left_count=1 since first block is LEFT
+                     0,     // current_lb starts at 0
                      best_cost, best_result, nodes_visited);
     
     // Step 5: Done
