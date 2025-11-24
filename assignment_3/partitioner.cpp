@@ -122,6 +122,7 @@ int compute_additional_cost(const Circuit& circuit,
 // Compute predicted cuts based on balance constraints
 // For nets that have blocks on only ONE side + unassigned blocks:
 // If there's not enough room on that side for all unassigned, net WILL be cut
+// Also predicts community splits based on same logic
 int compute_balance_predicted_cuts(const Circuit& circuit,
                                    const std::vector<Side>& assignment,
                                    int left_count,
@@ -132,6 +133,7 @@ int compute_balance_predicted_cuts(const Circuit& circuit,
     
     int predicted_cuts = 0;
     
+    // Predict net cuts
     for (int net_id : circuit.net_ids) {
         int on_left = 0;
         int on_right = 0;
@@ -160,6 +162,43 @@ int compute_balance_predicted_cuts(const Circuit& circuit,
             // For net to be safe, ALL unassigned must go RIGHT
             // If not enough room, at least one must go LEFT → cut!
             if (unassigned > spaces_right) {
+                predicted_cuts++;
+            }
+        }
+    }
+    
+    // Predict community splits
+    for (const auto& [blk_i, blk_j] : circuit.community_pairs) {
+        Side side_i = assignment[blk_i];
+        Side side_j = assignment[blk_j];
+        
+        // Already split or both assigned same side - skip
+        if (side_i != Side::UNASSIGNED && side_j != Side::UNASSIGNED) {
+            continue;  // Already counted in current_lb if split
+        }
+        
+        // One on LEFT, one unassigned
+        if (side_i == Side::LEFT && side_j == Side::UNASSIGNED) {
+            // If no room on LEFT, partner MUST go RIGHT → split!
+            if (spaces_left == 0) {
+                predicted_cuts++;
+            }
+        }
+        if (side_j == Side::LEFT && side_i == Side::UNASSIGNED) {
+            if (spaces_left == 0) {
+                predicted_cuts++;
+            }
+        }
+        
+        // One on RIGHT, one unassigned
+        if (side_i == Side::RIGHT && side_j == Side::UNASSIGNED) {
+            // If no room on RIGHT, partner MUST go LEFT → split!
+            if (spaces_right == 0) {
+                predicted_cuts++;
+            }
+        }
+        if (side_j == Side::RIGHT && side_i == Side::UNASSIGNED) {
+            if (spaces_right == 0) {
                 predicted_cuts++;
             }
         }
