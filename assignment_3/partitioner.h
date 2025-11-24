@@ -3,9 +3,13 @@
 
 #include "circuit.h"
 #include <vector>
+#include <map>
 
 // Main function to run branch and bound partitioner
 PartitionResult partition(const Circuit& circuit);
+
+// Build a map from block_id to its community partners
+std::map<int, std::vector<int>> build_community_map(const Circuit& circuit);
 
 // Sort blocks by fanout (descending) - the hint from assignment
 std::vector<int> sort_blocks_by_fanout(const Circuit& circuit);
@@ -30,6 +34,7 @@ int lower_bound(const Circuit& circuit,
 // Recursive branch and bound function
 void branch_and_bound(const Circuit& circuit,
                       const std::vector<int>& block_order,
+                      const std::map<int, std::vector<int>>& community_map,
                       std::vector<Side>& assignment,
                       int depth,
                       int left_count,

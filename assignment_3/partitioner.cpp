@@ -3,6 +3,18 @@
 #include <iostream>
 #include <climits>
 
+// Build a map from block_id to its community partners
+std::map<int, std::vector<int>> build_community_map(const Circuit& circuit) {
+    std::map<int, std::vector<int>> community_map;
+    
+    for (const auto& [blk_i, blk_j] : circuit.community_pairs) {
+        community_map[blk_i].push_back(blk_j);
+        community_map[blk_j].push_back(blk_i);
+    }
+    
+    return community_map;
+}
+
 // Sort blocks by fanout (descending) - high fanout first
 std::vector<int> sort_blocks_by_fanout(const Circuit& circuit) {
     std::vector<int> block_order = circuit.block_ids;
@@ -125,6 +137,7 @@ int compute_initial_solution(const Circuit& circuit,
 // Recursive branch and bound
 void branch_and_bound(const Circuit& circuit,
                       const std::vector<int>& block_order,
+                      const std::map<int, std::vector<int>>& community_map,
                       std::vector<Side>& assignment,
                       int depth,
                       int left_count,
@@ -189,17 +202,53 @@ void branch_and_bound(const Circuit& circuit,
     // Get next block to assign
     int blk = block_order[depth];
     
-    // Try LEFT
-    assignment[blk] = Side::LEFT;
-    branch_and_bound(circuit, block_order, assignment, depth + 1,
-                     left_count + 1, right_count,
-                     best_cost, best_result, nodes_visited);
+    // Determine branching order based on community partners
+    // Default: try LEFT first
+    Side first_side = Side::LEFT;
+    Side second_side = Side::RIGHT;
     
-    // Try RIGHT
-    assignment[blk] = Side::RIGHT;
-    branch_and_bound(circuit, block_order, assignment, depth + 1,
-                     left_count, right_count + 1,
-                     best_cost, best_result, nodes_visited);
+    // Check if this block has community partners
+    auto it = community_map.find(blk);
+    if (it != community_map.end()) {
+        // Check if any partner is already assigned
+        for (int partner : it->second) {
+            if (assignment[partner] == Side::LEFT) {
+                // Partner is LEFT, try LEFT first (keep together)
+                first_side = Side::LEFT;
+                second_side = Side::RIGHT;
+                break;
+            } else if (assignment[partner] == Side::RIGHT) {
+                // Partner is RIGHT, try RIGHT first (keep together)
+                first_side = Side::RIGHT;
+                second_side = Side::LEFT;
+                break;
+            }
+        }
+    }
+    
+    // Try first side
+    assignment[blk] = first_side;
+    if (first_side == Side::LEFT) {
+        branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
+                         left_count + 1, right_count,
+                         best_cost, best_result, nodes_visited);
+    } else {
+        branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
+                         left_count, right_count + 1,
+                         best_cost, best_result, nodes_visited);
+    }
+    
+    // Try second side
+    assignment[blk] = second_side;
+    if (second_side == Side::LEFT) {
+        branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
+                         left_count + 1, right_count,
+                         best_cost, best_result, nodes_visited);
+    } else {
+        branch_and_bound(circuit, block_order, community_map, assignment, depth + 1,
+                         left_count, right_count + 1,
+                         best_cost, best_result, nodes_visited);
+    }
     
     // Restore (backtrack)
     assignment[blk] = Side::UNASSIGNED;
@@ -233,6 +282,9 @@ PartitionResult partition(const Circuit& circuit) {
     std::vector<Side> assignment(max_block_id + 1, Side::UNASSIGNED);
     int nodes_visited = 0;
     
+    // Build community map for efficient partner lookup
+    std::map<int, std::vector<int>> community_map = build_community_map(circuit);
+    
     // Fix first block to LEFT (symmetry breaking)
     int first_blk = block_order[0];
     assignment[first_blk] = Side::LEFT;
@@ -240,7 +292,7 @@ PartitionResult partition(const Circuit& circuit) {
     std::cout << "Starting B&B (block " << first_blk << " fixed to LEFT)..." << std::endl;
     
     // Step 4: Run branch and bound starting from depth 1
-    branch_and_bound(circuit, block_order, assignment, 1,
+    branch_and_bound(circuit, block_order, community_map, assignment, 1,
                      1, 0,  // left_count=1 since first block is LEFT
                      best_cost, best_result, nodes_visited);
     
