@@ -1,0 +1,188 @@
+Step 5: Standard Cell Mapping (Full Library)
+=============================================
+
+Processing alu4...
+-----------------------------------
+ABC command line: "read_blif alu4.blif; resyn2; read_library mcnc.genlib; map -v; print_stats; print_gates; write_blif step_5/alu4.mapped.sc.blif".
+
+Entered genlib library with 23 gates from file "mcnc.genlib".
+Converting "mcnc.genlib" into supergate library "mcnc.super".
+Maximum level: Original = 13. Reduced due to choices = 13.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =   2370.  Total 5-feasible cuts =      24847.  Per node = 10.5. Time =     0.01 sec
+Delay    : Delay =     0.00  Flow =      4670.5  Area =      5615.0   0.0 %   Time =     0.00 sec
+AreaFlow : Delay =    12.90  Flow =      4211.4  Area =      4915.0  12.5 %   Time =     0.00 sec
+Area     : Delay =    12.90  Flow =         0.0  Area =      4706.0  16.2 %   Time =     0.01 sec
+Area     : Delay =    12.90  Flow =         0.0  Area =      4578.0  18.5 %   Time =     0.01 sec
+Output  o_7_    : Delay = (12.90, 12.90)  NEG
+Output  o_4_    : Delay = (12.90, 12.90)  NEG
+Output  o_2_    : Delay = (12.80, 12.80)  NEG
+Output  o_5_    : Delay = (12.70, 12.70)  NEG
+Output  o_6_    : Delay = (12.50, 12.50)  NEG
+Total runtime =     0.03 sec
+[1;37mtop                           :[0m i/o =   14/    8  lat =    0  nd =  1843  edge =   4549  area =4578.00  delay =12.90  lev = 12
+and2     Fanin =  2   Instance =        4   Area =      12.00     0.26 %          0         0   a*b
+aoi21    Fanin =  3   Instance =       91   Area =     273.00     5.96 %          0         0   !(a*b+c)
+aoi22    Fanin =  4   Instance =       30   Area =     120.00     2.62 %          0         0   !(a*b+c*d)
+inv1     Fanin =  1   Instance =      264   Area =     264.00     5.77 %          0         0   !a
+nand2    Fanin =  2   Instance =      440   Area =     880.00    19.22 %          0         0   !(a*b)
+nand3    Fanin =  3   Instance =      289   Area =     867.00    18.94 %          0         0   !(a*b*c)
+nand4    Fanin =  4   Instance =      223   Area =     892.00    19.48 %          0         0   !(a*b*c*d)
+nor2     Fanin =  2   Instance =      290   Area =     580.00    12.67 %          0         0   !(a+b)
+nor3     Fanin =  3   Instance =       43   Area =     129.00     2.82 %          0         0   !(a+b+c)
+oai21    Fanin =  3   Instance =      118   Area =     354.00     7.73 %          0         0   !((a+b)*c)
+oai22    Fanin =  4   Instance =       40   Area =     160.00     3.49 %          0         0   !((a+b)*(c+d))
+or2      Fanin =  2   Instance =        4   Area =      12.00     0.26 %          0         0   a+b
+xnor2a   Fanin =  2   Instance =        3   Area =      15.00     0.33 %          0         0   a*b+!a*!b
+xor2a    Fanin =  2   Instance =        4   Area =      20.00     0.44 %          0         0   a*!b+!a*b
+TOTAL                 Instance =     1843   Area =    4578.00   100.00 %   AbsDiff = 0
+
+
+Processing clma...
+-----------------------------------
+ABC command line: "read_blif clma.blif; resyn2; read_library mcnc.genlib; map -v; print_stats; print_gates; write_blif step_5/clma.mapped.sc.blif".
+
+Entered genlib library with 23 gates from file "mcnc.genlib".
+Converting "mcnc.genlib" into supergate library "mcnc.super".
+Maximum level: Original = 38. Reduced due to choices = 38.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =   9483.  Total 5-feasible cuts =     139499.  Per node = 14.7. Time =     0.05 sec
+Delay    : Delay =     0.00  Flow =     55374.5  Area =     24868.0   0.0 %   Time =     0.01 sec
+AreaFlow : Delay =    30.60  Flow =     18264.5  Area =     20305.0  18.3 %   Time =     0.01 sec
+Area     : Delay =    30.60  Flow =         0.0  Area =     17968.0  27.7 %   Time =     0.03 sec
+Area     : Delay =    30.60  Flow =         0.0  Area =     17398.0  30.0 %   Time =     0.03 sec
+Output  n1047    : Delay = (30.60, 30.60)  NEG
+Output  n1057    : Delay = (30.60, 30.60)  NEG
+Output  n1077    : Delay = (30.60, 30.60)  NEG
+Output  n1087    : Delay = (30.60, 30.60)  NEG
+Output  n1037    : Delay = (30.60, 30.60)  NEG
+Total runtime =     0.16 sec
+[1;37mtop                           :[0m i/o =  383/   82  lat =   33  nd =  7361  edge =  17244  area =17402.00  delay =30.60  lev = 26
+and2    Fanin =  2   Instance =      117   Area =     351.00     2.02 %          0         0   a*b
+aoi21   Fanin =  3   Instance =      908   Area =    2724.00    15.65 %          0         0   !(a*b+c)
+aoi22   Fanin =  4   Instance =      124   Area =     496.00     2.85 %          0         0   !(a*b+c*d)
+inv1    Fanin =  1   Instance =      977   Area =     977.00     5.61 %          0         0   !a
+nand2   Fanin =  2   Instance =     2263   Area =    4526.00    26.01 %          0         0   !(a*b)
+nand3   Fanin =  3   Instance =      810   Area =    2430.00    13.96 %          0         0   !(a*b*c)
+nand4   Fanin =  4   Instance =      290   Area =    1160.00     6.67 %          0         0   !(a*b*c*d)
+nor2    Fanin =  2   Instance =      904   Area =    1808.00    10.39 %          0         0   !(a+b)
+nor3    Fanin =  3   Instance =       94   Area =     282.00     1.62 %          0         0   !(a+b+c)
+nor4    Fanin =  4   Instance =        9   Area =      36.00     0.21 %          0         0   !(a+b+c+d)
+oai21   Fanin =  3   Instance =      759   Area =    2277.00    13.08 %          0         0   !((a+b)*c)
+oai22   Fanin =  4   Instance =       55   Area =     220.00     1.26 %          0         0   !((a+b)*(c+d))
+or2     Fanin =  2   Instance =       35   Area =     105.00     0.60 %          0         0   a+b
+xor2a   Fanin =  2   Instance =        2   Area =      10.00     0.06 %          0         0   a*!b+!a*b
+zero    Fanin =  0   Instance =       14   Area =       0.00     0.00 %          0         0   CONST0
+TOTAL                Instance =     7361   Area =   17402.00   100.00 %   AbsDiff = 0
+
+
+Processing div...
+-----------------------------------
+ABC command line: "read_blif div.blif; resyn2; read_library mcnc.genlib; map -v; print_stats; print_gates; write_blif step_5/div.mapped.sc.blif".
+
+Entered genlib library with 23 gates from file "mcnc.genlib".
+Converting "mcnc.genlib" into supergate library "mcnc.super".
+Maximum level: Original = 4361. Reduced due to choices = 4361.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =  40900.  Total 5-feasible cuts =    1034396.  Per node = 25.3. Time =     0.54 sec
+Delay    : Delay =     0.00  Flow = 885131283771551821840661872640.0  Area =    124446.0   0.0 %   Time =     0.06 sec
+AreaFlow : Delay =  3440.36  Flow =      8625.2  Area =     98466.0  20.9 %   Time =     0.07 sec
+Area     : Delay =  3440.36  Flow =         0.0  Area =     86911.0  30.2 %   Time =     0.11 sec
+Area     : Delay =  3440.36  Flow =         0.0  Area =     86404.0  30.6 %   Time =     0.10 sec
+Output  quotient[0]     : Delay = (3440.36, 3440.36)  NEG
+Output  remainder[0]    : Delay = (3440.36, 3440.36)  NEG
+Output  remainder[2]    : Delay = (3440.36, 3440.36)  NEG
+Output  remainder[3]    : Delay = (3440.36, 3440.36)  NEG
+Output  remainder[4]    : Delay = (3440.36, 3440.36)  NEG
+Total runtime =     1.11 sec
+[1;37mtop                           :[0m i/o =  128/  128  lat =    0  nd = 27722  edge =  63038  area =86404.00  delay =3440.36  lev = 2237
+and2     Fanin =  2   Instance =     1428   Area =    4284.00     4.96 %          0         0   a*b
+aoi21    Fanin =  3   Instance =     2622   Area =    7866.00     9.10 %          0         0   !(a*b+c)
+aoi22    Fanin =  4   Instance =       18   Area =      72.00     0.08 %          0         0   !(a*b+c*d)
+inv1     Fanin =  1   Instance =     1599   Area =    1599.00     1.85 %          0         0   !a
+nand2    Fanin =  2   Instance =     7349   Area =   14698.00    17.01 %          0         0   !(a*b)
+nand3    Fanin =  3   Instance =      831   Area =    2493.00     2.89 %          0         0   !(a*b*c)
+nand4    Fanin =  4   Instance =       62   Area =     248.00     0.29 %          0         0   !(a*b*c*d)
+nor2     Fanin =  2   Instance =      796   Area =    1592.00     1.84 %          0         0   !(a+b)
+nor3     Fanin =  3   Instance =       36   Area =     108.00     0.12 %          0         0   !(a+b+c)
+nor4     Fanin =  4   Instance =        4   Area =      16.00     0.02 %          0         0   !(a+b+c+d)
+oai21    Fanin =  3   Instance =     5530   Area =   16590.00    19.20 %          0         0   !((a+b)*c)
+oai22    Fanin =  4   Instance =        3   Area =      12.00     0.01 %          0         0   !((a+b)*(c+d))
+or2      Fanin =  2   Instance =      197   Area =     591.00     0.68 %          0         0   a+b
+xnor2a   Fanin =  2   Instance =     2726   Area =   13630.00    15.77 %          0         0   a*b+!a*!b
+xor2a    Fanin =  2   Instance =     4521   Area =   22605.00    26.16 %          0         0   a*!b+!a*b
+TOTAL                 Instance =    27722   Area =   86404.00   100.00 %   AbsDiff = 0
+
+
+Processing misex3...
+-----------------------------------
+ABC command line: "read_blif misex3.blif; resyn2; read_library mcnc.genlib; map -v; print_stats; print_gates; write_blif step_5/misex3.mapped.sc.blif".
+
+Entered genlib library with 23 gates from file "mcnc.genlib".
+Converting "mcnc.genlib" into supergate library "mcnc.super".
+Maximum level: Original = 12. Reduced due to choices = 12.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =   2134.  Total 5-feasible cuts =      29791.  Per node = 14.0. Time =     0.01 sec
+Delay    : Delay =     0.00  Flow =      4581.8  Area =      5064.0   0.0 %   Time =     0.00 sec
+AreaFlow : Delay =    11.80  Flow =      3848.2  Area =      4432.0  12.5 %   Time =     0.00 sec
+Area     : Delay =    11.80  Flow =         0.0  Area =      4231.0  16.4 %   Time =     0.01 sec
+Area     : Delay =    11.80  Flow =         0.0  Area =      4139.0  18.3 %   Time =     0.01 sec
+Output  q2    : Delay = (11.80, 11.80)  NEG
+Output  o2    : Delay = (11.80, 11.80)  NEG
+Output  r2    : Delay = (11.80, 11.80)  NEG
+Output  s2    : Delay = (11.80, 11.80)  NEG
+Output  p2    : Delay = (11.80, 11.80)  NEG
+Total runtime =     0.03 sec
+[1;37mtop                           :[0m i/o =   14/   14  lat =    0  nd =  1664  edge =   4125  area =4139.00  delay =11.80  lev = 11
+and2    Fanin =  2   Instance =       11   Area =      33.00     0.80 %          0         0   a*b
+aoi21   Fanin =  3   Instance =       47   Area =     141.00     3.41 %          0         0   !(a*b+c)
+aoi22   Fanin =  4   Instance =       54   Area =     216.00     5.22 %          0         0   !(a*b+c*d)
+inv1    Fanin =  1   Instance =      247   Area =     247.00     5.97 %          0         0   !a
+nand2   Fanin =  2   Instance =      376   Area =     752.00    18.17 %          0         0   !(a*b)
+nand3   Fanin =  3   Instance =      370   Area =    1110.00    26.82 %          0         0   !(a*b*c)
+nand4   Fanin =  4   Instance =      167   Area =     668.00    16.14 %          0         0   !(a*b*c*d)
+nor2    Fanin =  2   Instance =      241   Area =     482.00    11.65 %          0         0   !(a+b)
+nor3    Fanin =  3   Instance =       17   Area =      51.00     1.23 %          0         0   !(a+b+c)
+nor4    Fanin =  4   Instance =        1   Area =       4.00     0.10 %          0         0   !(a+b+c+d)
+oai21   Fanin =  3   Instance =       94   Area =     282.00     6.81 %          0         0   !((a+b)*c)
+oai22   Fanin =  4   Instance =       36   Area =     144.00     3.48 %          0         0   !((a+b)*(c+d))
+or2     Fanin =  2   Instance =        3   Area =       9.00     0.22 %          0         0   a+b
+TOTAL                Instance =     1664   Area =    4139.00   100.00 %   AbsDiff = 0
+
+
+Processing sqrt...
+-----------------------------------
+ABC command line: "read_blif sqrt.blif; resyn2; read_library mcnc.genlib; map -v; print_stats; print_gates; write_blif step_5/sqrt.mapped.sc.blif".
+
+Entered genlib library with 23 gates from file "mcnc.genlib".
+Converting "mcnc.genlib" into supergate library "mcnc.super".
+Maximum level: Original = 4968. Reduced due to choices = 4968.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =  19565.  Total 5-feasible cuts =     527519.  Per node = 27.0. Time =     0.33 sec
+Delay    : Delay =     0.00  Flow = 24135251355060215145219135373312.0  Area =     73723.0   0.0 %   Time =     0.03 sec
+AreaFlow : Delay =  4170.78  Flow =      3453.4  Area =     46945.0  36.3 %   Time =     0.04 sec
+Area     : Delay =  4170.78  Flow =         0.0  Area =     39409.0  46.5 %   Time =     0.07 sec
+Area     : Delay =  4170.78  Flow =         0.0  Area =     39155.0  46.9 %   Time =     0.06 sec
+Output  asqrt[0]    : Delay = (4170.78, 4170.78)  NEG
+Output  asqrt[1]    : Delay = (4116.08, 4116.08)  NEG
+Output  asqrt[2]    : Delay = (3985.67, 3985.67)  NEG
+Output  asqrt[3]    : Delay = (3857.36, 3857.36)  NEG
+Output  asqrt[4]    : Delay = (3731.16, 3731.16)  NEG
+Total runtime =     0.68 sec
+[1;37mtop                           :[0m i/o =  128/   64  lat =    0  nd = 16034  edge =  35172  area =39155.00  delay =4170.78  lev = 3884
+and2     Fanin =  2   Instance =      575   Area =    1725.00     4.41 %          0         0   a*b
+aoi21    Fanin =  3   Instance =      456   Area =    1368.00     3.49 %          0         0   !(a*b+c)
+aoi22    Fanin =  4   Instance =      622   Area =    2488.00     6.35 %          0         0   !(a*b+c*d)
+inv1     Fanin =  1   Instance =     1813   Area =    1813.00     4.63 %          0         0   !a
+nand2    Fanin =  2   Instance =     7387   Area =   14774.00    37.73 %          0         0   !(a*b)
+nand3    Fanin =  3   Instance =     2659   Area =    7977.00    20.37 %          0         0   !(a*b*c)
+nand4    Fanin =  4   Instance =       56   Area =     224.00     0.57 %          0         0   !(a*b*c*d)
+nor2     Fanin =  2   Instance =      899   Area =    1798.00     4.59 %          0         0   !(a+b)
+nor3     Fanin =  3   Instance =       59   Area =     177.00     0.45 %          0         0   !(a+b+c)
+oai21    Fanin =  3   Instance =      357   Area =    1071.00     2.74 %          0         0   !((a+b)*c)
+oai22    Fanin =  4   Instance =       15   Area =      60.00     0.15 %          0         0   !((a+b)*(c+d))
+xnor2a   Fanin =  2   Instance =      885   Area =    4425.00    11.30 %          0         0   a*b+!a*!b
+xor2a    Fanin =  2   Instance =      251   Area =    1255.00     3.21 %          0         0   a*!b+!a*b
+TOTAL                 Instance =    16034   Area =   39155.00   100.00 %   AbsDiff = 0
+
+

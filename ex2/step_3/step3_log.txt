@@ -1,0 +1,43 @@
+Step 3: 6-LUT Mapping (Depth Optimization) with resyn2 x3
+==========================================================
+
+Processing alu4...
+-----------------------------------
+ABC command line: "read_blif alu4.blif; resyn2; resyn2; resyn2; print_stats; if -K 6; print_stats; write_blif step_3/alu4.mapped.blif".
+
+[1;37mtop                           :[0m i/o =   14/    8  lat =    0  and =   2226  lev = 13
+[1;37mtop                           :[0m i/o =   14/    8  lat =    0  nd =   872  edge =   4064  aig  =  3514  lev = 5
+
+
+Processing clma...
+-----------------------------------
+ABC command line: "read_blif clma.blif; resyn2; resyn2; resyn2; print_stats; if -K 6; print_stats; write_blif step_3/clma.mapped.blif".
+
+[1;37mtop                           :[0m i/o =  383/   82  lat =   33  and =   8159  lev = 38
+[1;37mtop                           :[0m i/o =  383/   82  lat =   33  nd =  3101  edge =  13843  aig  = 12514  lev = 10
+
+
+Processing div...
+-----------------------------------
+ABC command line: "read_blif div.blif; resyn2; resyn2; resyn2; print_stats; if -K 6; print_stats; write_blif step_3/div.mapped.blif".
+
+[1;37mtop                           :[0m i/o =  128/  128  lat =    0  and =  40720  lev =4361
+[1;37mtop                           :[0m i/o =  128/  128  lat =    0  nd =  9889  edge =  41003  aig  = 73953  lev = 858
+
+
+Processing misex3...
+-----------------------------------
+ABC command line: "read_blif misex3.blif; resyn2; resyn2; resyn2; print_stats; if -K 6; print_stats; write_blif step_3/misex3.mapped.blif".
+
+[1;37mtop                           :[0m i/o =   14/   14  lat =    0  and =   2035  lev = 12
+[1;37mtop                           :[0m i/o =   14/   14  lat =    0  nd =   787  edge =   3679  aig  =  3467  lev = 5
+
+
+Processing sqrt...
+-----------------------------------
+ABC command line: "read_blif sqrt.blif; resyn2; resyn2; resyn2; print_stats; if -K 6; print_stats; write_blif step_3/sqrt.mapped.blif".
+
+[1;37mtop                           :[0m i/o =  128/   64  lat =    0  and =  19437  lev =4968
+[1;37mtop                           :[0m i/o =  128/   64  lat =    0  nd =  4528  edge =  21102  aig  = 33717  lev = 1005
+
+

@@ -2,3 +2,5 @@ assignment_1/ezgl/** linguist-vendored
 assignment_2/ezgl/** linguist-vendored
 assignment_2/SuiteSparse-5.10.1/** linguist-vendored
 *.ipynb linguist-vendored
+ex2/abc/** linguist-vendored
+ex1/vtr-verilog-to-routing/** linguist-vendored
