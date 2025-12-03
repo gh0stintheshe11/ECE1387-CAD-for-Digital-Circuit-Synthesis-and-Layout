@@ -1,0 +1,20 @@
+Step 7: LUT vs NAND-Gate-Equivalent Analysis
+==========================================================================================
+
+Circuit    Step1 LUTs   Step2 LUTs   NAND-Equiv      Gates/LUT(S1)   Gates/LUT(S2)  
+------------------------------------------------------------------------------------------
+alu4       850          815          3037.5          3.57            3.73           
+clma       3464         2991         11144.5         3.22            3.73           
+div        9919         8197         48975.0         4.94            5.97           
+misex3     803          754          2750.0          3.42            3.65           
+sqrt       4409         5127         23642.0         5.36            4.61           
+------------------------------------------------------------------------------------------
+TOTAL      19445        17884        89549.0         4.61            5.01           
+
+Notes:
+- NAND-Equiv = #nand2 + 0.5*#inv1
+- Gates/LUT(S1) = NAND-Equiv / Step1 LUTs (depth-optimized)
+- Gates/LUT(S2) = NAND-Equiv / Step2 LUTs (area-optimized)
+
+Average NAND-gate-equivalents per LUT (Step 1): 4.61
+Average NAND-gate-equivalents per LUT (Step 2): 5.01

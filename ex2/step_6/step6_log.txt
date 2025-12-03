@@ -1,0 +1,129 @@
+Step 6: Standard Cell Mapping (Minimal Library)
+================================================
+
+Processing alu4...
+-----------------------------------
+ABC command line: "read_blif alu4.blif; resyn2; read_library mcnc_step6.genlib; map -v; print_stats; print_gates; write_blif step_6/alu4.mapped.sc.blif".
+
+Entered genlib library with 5 gates from file "mcnc_step6.genlib".
+Converting "mcnc_step6.genlib" into supergate library "mcnc_step6.super".
+Maximum level: Original = 13. Reduced due to choices = 13.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =   2370.  Total 5-feasible cuts =      24847.  Per node = 10.5. Time =     0.01 sec
+Delay    : Delay =     0.00  Flow =      4712.0  Area =      6075.0   0.0 %   Time =     0.00 sec
+AreaFlow : Delay =    23.80  Flow =      4684.0  Area =      6075.0   0.0 %   Time =     0.00 sec
+Area     : Delay =    23.80  Flow =         0.0  Area =      6075.0   0.0 %   Time =     0.00 sec
+Area     : Delay =    23.80  Flow =         0.0  Area =      6075.0   0.0 %   Time =     0.00 sec
+Output  o_7_    : Delay = (23.80, 23.80)  NEG
+Output  o_4_    : Delay = (23.80, 23.80)  NEG
+Output  o_5_    : Delay = (20.00, 20.00)  NEG
+Output  o_3_    : Delay = (20.00, 20.00)  NEG
+Output  o_2_    : Delay = (18.10, 18.10)  NEG
+Total runtime =     0.02 sec
+[1;37mtop                           :[0m i/o =   14/    8  lat =    0  nd =  3719  edge =   6075  area =6075.00  delay =23.80  lev = 25
+inv1    Fanin =  1   Instance =     1363   Area =    1363.00    22.44 %          0         0   !a
+nand2   Fanin =  2   Instance =     2356   Area =    4712.00    77.56 %          0         0   !(a*b)
+TOTAL                Instance =     3719   Area =    6075.00   100.00 %   AbsDiff = 0
+
+
+Processing clma...
+-----------------------------------
+ABC command line: "read_blif clma.blif; resyn2; read_library mcnc_step6.genlib; map -v; print_stats; print_gates; write_blif step_6/clma.mapped.sc.blif".
+
+Entered genlib library with 5 gates from file "mcnc_step6.genlib".
+Converting "mcnc_step6.genlib" into supergate library "mcnc_step6.super".
+Maximum level: Original = 38. Reduced due to choices = 38.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =   9483.  Total 5-feasible cuts =     139499.  Per node = 14.7. Time =     0.05 sec
+Delay    : Delay =     0.00  Flow =     18174.2  Area =     22287.0   0.0 %   Time =     0.00 sec
+AreaFlow : Delay =    55.00  Flow =     16795.6  Area =     22287.0   0.0 %   Time =     0.00 sec
+Area     : Delay =    55.00  Flow =         0.0  Area =     22287.0   0.0 %   Time =     0.01 sec
+Area     : Delay =    55.00  Flow =         0.0  Area =     22287.0   0.0 %   Time =     0.01 sec
+Output  n1057    : Delay = (55.00, 55.00)  NEG
+Output  n1077    : Delay = (52.70, 52.70)  NEG
+Output  n1047    : Delay = (51.20, 51.20)  NEG
+Output  n1037    : Delay = (43.90, 43.90)  NEG
+Output  n1087    : Delay = (43.30, 43.30)  NEG
+Total runtime =     0.11 sec
+[1;37mtop                           :[0m i/o =  383/   82  lat =   33  nd = 13236  edge =  22289  area =22289.00  delay =55.00  lev = 57
+inv1    Fanin =  1   Instance =     4155   Area =    4155.00    18.64 %          0         0   !a
+nand2   Fanin =  2   Instance =     9067   Area =   18134.00    81.36 %          0         0   !(a*b)
+zero    Fanin =  0   Instance =       14   Area =       0.00     0.00 %          0         0   CONST0
+TOTAL                Instance =    13236   Area =   22289.00   100.00 %   AbsDiff = 0
+
+
+Processing div...
+-----------------------------------
+ABC command line: "read_blif div.blif; resyn2; read_library mcnc_step6.genlib; map -v; print_stats; print_gates; write_blif step_6/div.mapped.sc.blif".
+
+Entered genlib library with 5 gates from file "mcnc_step6.genlib".
+Converting "mcnc_step6.genlib" into supergate library "mcnc_step6.super".
+Maximum level: Original = 4361. Reduced due to choices = 4361.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =  40900.  Total 5-feasible cuts =    1034396.  Per node = 25.3. Time =     0.52 sec
+Delay    : Delay =     0.00  Flow =     91157.1  Area =     97950.0   0.0 %   Time =     0.05 sec
+AreaFlow : Delay =  4535.29  Flow =      7689.6  Area =     97950.0   0.0 %   Time =     0.05 sec
+Area     : Delay =  4535.29  Flow =         0.0  Area =     97950.0   0.0 %   Time =     0.06 sec
+Area     : Delay =  4535.29  Flow =         0.0  Area =     97950.0   0.0 %   Time =     0.06 sec
+Output  quotient[0]     : Delay = (4535.29, 4535.29)  NEG
+Output  remainder[0]    : Delay = (4534.49, 4534.49)  NEG
+Output  remainder[1]    : Delay = (4533.49, 4533.49)  NEG
+Output  remainder[2]    : Delay = (4533.49, 4533.49)  NEG
+Output  remainder[3]    : Delay = (4533.49, 4533.49)  NEG
+Total runtime =     0.96 sec
+[1;37mtop                           :[0m i/o =  128/  128  lat =    0  nd = 57178  edge =  97950  area =97950.00  delay =4535.29  lev = 4555
+inv1    Fanin =  1   Instance =    16406   Area =   16406.00    16.75 %          0         0   !a
+nand2   Fanin =  2   Instance =    40772   Area =   81544.00    83.25 %          0         0   !(a*b)
+TOTAL                Instance =    57178   Area =   97950.00   100.00 %   AbsDiff = 0
+
+
+Processing misex3...
+-----------------------------------
+ABC command line: "read_blif misex3.blif; resyn2; read_library mcnc_step6.genlib; map -v; print_stats; print_gates; write_blif step_6/misex3.mapped.sc.blif".
+
+Entered genlib library with 5 gates from file "mcnc_step6.genlib".
+Converting "mcnc_step6.genlib" into supergate library "mcnc_step6.super".
+Maximum level: Original = 12. Reduced due to choices = 12.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =   2134.  Total 5-feasible cuts =      29791.  Per node = 14.0. Time =     0.01 sec
+Delay    : Delay =     0.00  Flow =      4238.8  Area =      5500.0   0.0 %   Time =     0.00 sec
+AreaFlow : Delay =    21.90  Flow =      4185.3  Area =      5500.0   0.0 %   Time =     0.00 sec
+Area     : Delay =    21.90  Flow =         0.0  Area =      5500.0   0.0 %   Time =     0.00 sec
+Area     : Delay =    21.90  Flow =         0.0  Area =      5500.0   0.0 %   Time =     0.00 sec
+Output  p2    : Delay = (21.90, 21.90)  NEG
+Output  q2    : Delay = (21.90, 21.90)  NEG
+Output  i2    : Delay = (21.90, 21.90)  NEG
+Output  n2    : Delay = (21.90, 21.90)  NEG
+Output  o2    : Delay = (21.90, 21.90)  NEG
+Total runtime =     0.02 sec
+[1;37mtop                           :[0m i/o =   14/   14  lat =    0  nd =  3380  edge =   5500  area =5500.00  delay =21.90  lev = 23
+inv1    Fanin =  1   Instance =     1260   Area =    1260.00    22.91 %          0         0   !a
+nand2   Fanin =  2   Instance =     2120   Area =    4240.00    77.09 %          0         0   !(a*b)
+TOTAL                Instance =     3380   Area =    5500.00   100.00 %   AbsDiff = 0
+
+
+Processing sqrt...
+-----------------------------------
+ABC command line: "read_blif sqrt.blif; resyn2; read_library mcnc_step6.genlib; map -v; print_stats; print_gates; write_blif step_6/sqrt.mapped.sc.blif".
+
+Entered genlib library with 5 gates from file "mcnc_step6.genlib".
+Converting "mcnc_step6.genlib" into supergate library "mcnc_step6.super".
+Maximum level: Original = 4968. Reduced due to choices = 4968.
+Choice stats:  Choice nodes = 0. Total choices = 0.
+Nodes =  19565.  Total 5-feasible cuts =     527519.  Per node = 27.0. Time =     0.29 sec
+Delay    : Delay =     0.00  Flow =     62822.3  Area =     47284.0   0.0 %   Time =     0.02 sec
+AreaFlow : Delay =  5970.54  Flow =      6394.3  Area =     47284.0   0.0 %   Time =     0.02 sec
+Area     : Delay =  5970.54  Flow =         0.0  Area =     47284.0   0.0 %   Time =     0.03 sec
+Area     : Delay =  5970.54  Flow =         0.0  Area =     47284.0   0.0 %   Time =     0.03 sec
+Output  asqrt[0]    : Delay = (5970.54, 5970.54)  NEG
+Output  asqrt[1]    : Delay = (5899.84, 5899.84)  NEG
+Output  asqrt[2]    : Delay = (5715.14, 5715.14)  NEG
+Output  asqrt[3]    : Delay = (5532.44, 5532.44)  NEG
+Output  asqrt[4]    : Delay = (5353.65, 5353.65)  NEG
+Total runtime =     0.52 sec
+[1;37mtop                           :[0m i/o =  128/   64  lat =    0  nd = 27847  edge =  47284  area =47284.00  delay =5970.54  lev = 6082
+inv1    Fanin =  1   Instance =     8410   Area =    8410.00    17.79 %          0         0   !a
+nand2   Fanin =  2   Instance =    19437   Area =   38874.00    82.21 %          0         0   !(a*b)
+TOTAL                Instance =    27847   Area =   47284.00   100.00 %   AbsDiff = 0
+
+
