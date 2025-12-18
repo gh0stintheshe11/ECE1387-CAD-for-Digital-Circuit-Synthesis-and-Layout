@@ -1,0 +1,44 @@
+Step 4: Fracturable LUT Packing
+==================================================
+
+Processing alu4...
+  Original LUTs: 815
+  Fracturable LUTs: 625
+  Paired: 190, Single: 435
+  Reduction: 190 LUTs (23.3%)
+
+Processing clma...
+  Original LUTs: 2977
+  Fracturable LUTs: 2244
+  Paired: 733, Single: 1511
+  Reduction: 733 LUTs (24.6%)
+
+Processing div...
+  Original LUTs: 8197
+  Fracturable LUTs: 4246
+  Paired: 3951, Single: 295
+  Reduction: 3951 LUTs (48.2%)
+
+Processing misex3...
+  Original LUTs: 754
+  Fracturable LUTs: 589
+  Paired: 165, Single: 424
+  Reduction: 165 LUTs (21.9%)
+
+Processing sqrt...
+  Original LUTs: 5127
+  Fracturable LUTs: 2716
+  Paired: 2411, Single: 305
+  Reduction: 2411 LUTs (47.0%)
+
+==================================================
+Summary:
+Circuit    Original   Fracturable  Reduction 
+--------------------------------------------------
+alu4       815        625          190       
+clma       2977       2244         733       
+div        8197       4246         3951      
+misex3     754        589          165       
+sqrt       5127       2716         2411      
+--------------------------------------------------
+TOTAL      17870      10420        7450       (41.7%)

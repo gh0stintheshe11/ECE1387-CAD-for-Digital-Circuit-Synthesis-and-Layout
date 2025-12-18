@@ -1,3 +1,86 @@
+# ECE 1387 – Exercise 2
+
+Lang Sun
+1003584971
+
+## 1.
+
+
+
+## 2.
+
+
+
+## 3.
+
+
+
+## 4.
+
+```mermaid
+flowchart TD
+    Start([Start]) --> Init[Initialize: Read circuit list]
+    Init --> CreateDir[Create step_4 directory]
+    CreateDir --> OpenLog[Open step4_log.txt]
+    
+    OpenLog --> LoopCircuits{For each circuit}
+    
+    LoopCircuits -->|Next circuit| ParseBLIF[Parse BLIF file]
+    
+    ParseBLIF --> ReadLines[Read file line by line]
+    ReadLines --> CheckNames{Line starts with<br/>.names?}
+    CheckNames -->|Yes| ExtractTokens[Extract tokens:<br/>inputs and output]
+    ExtractTokens --> CheckInputs{Has inputs?}
+    CheckInputs -->|Yes| StoreLUT[Store LUT:<br/>output, inputs set]
+    CheckInputs -->|No| ReadLines
+    StoreLUT --> ReadLines
+    CheckNames -->|No| ReadLines
+    ReadLines -->|EOF| LUTList[LUT list created]
+    
+    LUTList --> BuildCompat[Build compatibility graph]
+    BuildCompat --> NestedLoop{For each LUT pair<br/>i, j}
+    NestedLoop --> CheckPack{Can pack together?<br/>Combined inputs ≤ 5?}
+    CheckPack -->|Yes| AddCompat[Add j to compatibility[i]<br/>Add i to compatibility[j]]
+    AddCompat --> NestedLoop
+    CheckPack -->|No| NestedLoop
+    NestedLoop -->|All pairs checked| SortLUTs[Sort LUTs by<br/>compatibility count<br/>fewer partners first]
+    
+    SortLUTs --> GreedyPack{For each LUT i<br/>in sorted order}
+    GreedyPack -->|Next LUT| CheckUsed{Already used?}
+    CheckUsed -->|Yes| GreedyPack
+    CheckUsed -->|No| FindPartner[Search compatible LUTs<br/>for unused partner]
+    FindPartner --> HasPartner{Partner found?}
+    
+    HasPartner -->|Yes| PackPair[Pack two LUTs together<br/>Mark both as used]
+    PackPair --> GreedyPack
+    
+    HasPartner -->|No| PackSingle[Pack single LUT<br/>Mark as used]
+    PackSingle --> GreedyPack
+    
+    GreedyPack -->|All LUTs packed| WriteOutput[Write packed results<br/>to circuit.packed.txt]
+    WriteOutput --> LogResults[Log statistics:<br/>Original, Fracturable,<br/>Reduction]
+    
+    LogResults --> LoopCircuits
+    LoopCircuits -->|All done| Summary[Generate summary table]
+    Summary --> CloseLog[Close log file]
+    CloseLog --> End([End])
+    
+    style Start fill:#90EE90
+    style End fill:#FFB6C1
+    style ParseBLIF fill:#87CEEB
+    style BuildCompat fill:#FFD700
+    style GreedyPack fill:#FFA07A
+    style PackPair fill:#98FB98
+    style PackSingle fill:#DDA0DD
+```
+
+## 5.
+
+
+
+## 6.
+
+
 
 ## 7.
 
