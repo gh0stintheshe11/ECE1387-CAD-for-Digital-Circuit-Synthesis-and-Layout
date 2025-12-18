@@ -39,8 +39,8 @@ flowchart TD
     
     LUTList --> BuildCompat[Build compatibility graph]
     BuildCompat --> NestedLoop{For each LUT pair<br/>i, j}
-    NestedLoop --> CheckPack{Can pack together?<br/>Combined inputs ≤ 5?}
-    CheckPack -->|Yes| AddCompat[Add j to compatibility[i]<br/>Add i to compatibility[j]]
+    NestedLoop --> CheckPack{Can pack together?<br/>Combined inputs <= 5?}
+    CheckPack -->|Yes| AddCompat[Add j to compat of i<br/>Add i to compat of j]
     AddCompat --> NestedLoop
     CheckPack -->|No| NestedLoop
     NestedLoop -->|All pairs checked| SortLUTs[Sort LUTs by<br/>compatibility count<br/>fewer partners first]
