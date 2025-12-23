@@ -4,3 +4,4 @@
 .venv
 ex2/abc/*
 ex2/abc.rc
+*.synctex.gz

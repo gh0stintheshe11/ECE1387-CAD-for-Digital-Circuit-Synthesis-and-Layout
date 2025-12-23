@@ -1,0 +1,324 @@
+\documentclass{article}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{tikz}           % For tikzpicture
+\usepackage{pgfplots}       % For axis environment
+\usepackage{subcaption}  % Add this to your preamble
+\usepackage{multicol}
+
+\title{SteerNet: An Autonomous Driving agent for Highway-Env}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{
+  Chen Hao Zhang \and Lang Sun\\
+  Electrical and Computer Engineering\\
+  University of Toronto
+}
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+This project tries to solve tasks within the realm of autonomous driving using reinforcement learning (RL) techniques. We choose Highway-Env simulator to be our environment. We plan to use an end to end approach, using image frame extracted from the environment as input to our Deep-Q-Networks. Multiple frames will be stacked together to form the current state of the environment. Evaluation will be carried out using metrics such as cumulative reward, average speed, and crash rate.
+\end{abstract}
+
+\section*{Assentation of Teamwork}
+\textbf{Chen Hao Zhang: } Environment setup and first implementation of DQN for highway-env.\\
+\textbf{Lang Sun: } Investigate and experiment to reduce crash rate.\\ 
+
+\section{Introduction}
+Autonomous driving is an exciting field, but writing rule based algorithms to handle complex driving conditions might not be feasible. Reinforcement learning algorithms learn from experience, rather than following explicit instructions. 
+
+Highway-env provides multiple forms of state observation, we plan to work with two of them. The first is Kinematics, which returns a matrix that describes the position, velocity of the ego-vehicle, and surrounding vehicles. The second provides a grayscale image. 
+
+To answer the question of whether Reinforcement Learning is better than rule-based approaches, we plan to implement a rule-based baseline that drives on simple deterministic rules, then evaluate our trained models against it.
+
+\section{Preliminaries and Problem Formulation}
+
+The autonomous driving task is formulated as an MDP with the following specifications\cite{leurent2018}:
+
+\subsection*{State Representation with Kinematics}
+The first implementation uses Kinematics where each state consists of a $n \times 5$ observation matrix.  Each row represents a vehicle (ego vehicle plus $n-1$ nearest neighbors) with features:
+\begin{equation}
+    s_t = \begin{bmatrix}
+    p_0 & x_0 & y_0 & v_{x,0} & v_{y,0} \\
+    p_1 & x_1 & y_1 & v_{x,1} & v_{y,1} \\
+    p_2 & x_2 & y_2 & v_{x,2} & v_{y,2} \\
+    p_3 & x_3 & y_3 & v_{x,3} & v_{y,3} \\
+    p_4 & x_4 & y_4 & v_{x,4} & v_{y,4}
+    \end{bmatrix}
+\end{equation}
+where:
+\begin{itemize}
+    \item $p_i \in \{0,1\}$: presence flag for vehicle $i$ (0 for padding)
+    \item $(x_i, y_i)$: relative position to ego vehicle
+    \item $(v_{x,i}, v_{y,i})$: relative velocity to ego vehicle
+\end{itemize}
+
+In the above example, we set $n = 5$. This fixed-size representation handles variable traffic density through zero-padding when fewer than 5 vehicles are present, or selection of the 4 nearest vehicles when more exist.
+
+\subsection*{State Representation with Grayscale Image}
+Each frame has a resolution of $240\times64$ pixels. To incorporate temporal information into the input, we will use frame stacking. A stack of four frames will consist of four consecutive frames.
+\begin{equation}
+    State\_dimention = 240 \times 64 \times 4
+\end{equation}
+
+\subsection*{Action Space}
+The discrete action set is provided by the Highway-Env simulator:
+\[
+\mathcal{A} = \{ \text{LANE\_LEFT},\ \text{IDLE},\ \text{LANE\_RIGHT},\ \text{FASTER},\ \text{SLOWER} \}.
+\]
+
+\subsection*{Objective}
+The goal is to train reinforcement learning agents to learn the optimal driving policy $\pi^*(s)$, which maximize expected cumulative reward for all states. In this case, we want to achieve the highest speed, while having the low collision rate.
+	
+\section{Design}
+\subsection{Baseline Implementation:}
+In order to evaluate our models, we need to implement a baseline to compare our results. The baseline agent uses simple deterministic rules shown below:
+\begin{itemize}
+    \item If the current lane is empty, speed down the current lane
+    \item If the current lane is not empty, check for adjacent lanes
+    \item If there are no empty lanes, follow the car in the front
+\end{itemize}
+
+\subsection{DQN using Kinematic Observation}
+In the kinematic implementation, we use the kinematic matrix, which is $n\times5$. We set $n=6$, and flatten it before passing it to the fully connected layers.
+
+The model is a three–layer feedforward neural network.  
+The architecture consists of three fully connected layers:
+\[
+\text{Linear}(\text{feature\_size} \to 512),\quad
+\text{Linear}(512 \to 64),\quad
+\text{Linear}(64 \to \text{num\_actions}).
+\]
+The feature\_size is $6\times5=30$, and the $num\_actions=5$
+
+\subsection{DQN using Grayscale Observation}
+We use a CNN for both the online network and target network\cite{wang2016}.
+
+The CNN takes in an tensor with size of $4\times240\times64$.
+
+Because a single frame cannot contain temporal information, velocity and direction cannot be inferred from it. Therefore we utilize frame stacking. Four consecutive frames are stacked together, which yields a four‑channel input to the CNN. The choice of stack size and kernel size are based on the DeepMind 2015 paper\cite{mnih2015}.
+
+\paragraph{CNN architecture:}
+\begin{itemize}
+    \item \textbf{Conv1: } {Conv2d} (4, 32, (8,4), (4,4))
+    \item \textbf{Conv2: } {Conv2d} (32, 64, (4,3), (2,2))
+    \item \textbf{Conv3: } {Conv2d} (64, 64, (3,3), (1,1))
+    \item \textbf{FC1: Linear} (\textit{conv\_out}, 512), $conv\_out = 8320$
+    \item \textbf{FC2: Linear} (512, 256)
+    \item \textbf{FC3: Linear} (256, N\_{\text{actions}}), $N\_actions = 5$
+\end{itemize}
+
+\subsection{Reward Function}
+\[
+\begin{aligned}
+\text{reward} &=
+\text{crashed}\times\text{crash\_penalty} \\
+&\quad + (1-\text{crashed})
+   \frac{\text{ego\_speed}-\text{min\_speed}}
+        {\text{max\_speed}-\text{min\_speed}} \\[6pt]
+&\quad +
+\begin{cases}
+\dfrac{\text{ego\_speed}}{19.5}, 
+  & \text{if } \text{ego\_speed} > 19.5,\\
+\ $0$, & \text{otherwise},
+\end{cases} \\[10pt]
+&\quad +
+\begin{cases}
+\ $-0.5$, & \text{if lane\_change},\\
+\ $0$, & \text{otherwise},
+\end{cases} \\[10pt]
+&\quad +
+\begin{cases}
+-\left(1 - \left(\dfrac{\text{distance\_to\_front}}
+{\text{min\_safe\_distance}}\right)^{2}\right)
+   \text{proximity\_penalty},
+ & \text{if } \text{distance\_to\_front} < \text{min\_safe\_distance},\\[6pt]
+$0$, & \text{otherwise}.
+\end{cases}
+\end{aligned}
+\]
+
+
+\section{Numerical Experiments}
+\textbf{Hyperparameters:}
+
+\begin{multicols}{3}
+\begin{itemize}
+    \item learning\_rate=1e-4
+    \item gamma=0.9
+    \item epsilon\_start=1.0
+    \item epsilon\_decay=0.998
+    \item duration=100
+    \item vehicles\_count=20
+    \item vehicles\_density=1.25
+\end{itemize}
+\end{multicols}
+
+
+% Images removed for testing - add back training_progress_dqn_kinematic.png and training_progress_dqn_grayscale.png
+
+\begin{figure}[]
+    \centering
+
+    % ------- SPEED -------
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \textbf{Average Speed}
+        \begin{tikzpicture}
+        \begin{axis}[
+            ybar,
+            ymin=0,
+            width=\linewidth,
+            height=0.7\linewidth,
+            symbolic x coords={Baseline,Kinematic,Gray,Gray\_v2},
+            xtick=data,
+            ymajorgrids=true,
+        ]
+        \addplot coordinates {(Baseline,20.89) (Kinematic,20.34) (Gray,28.24) (Gray\_v2,25.0)};
+        \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    % ------- COLLISIONS -------
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \textbf{Collision Rate per Episode (\%)}
+        \begin{tikzpicture}
+        \begin{axis}[
+            ybar,
+            ymin=0,
+            width=\linewidth,
+            height=0.7\linewidth,
+            symbolic x coords={Baseline,Kinematic,Gray,Gray\_v2},
+            xtick=data,
+            ymajorgrids=true,
+        ]
+        \addplot coordinates {(Baseline,3.33) (Kinematic,0.00) (Gray,26.67) (Gray\_v2,17.0)};
+        \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+
+    \caption{Comparison of average speed and collision rate}
+\end{figure}
+
+\section{Discussion: Crash Rate and Experiements}
+The training plot shows both agents are learning with improving rewards and increasing steps per episode.
+During evaluation, the Kinematic agent performed similarly to the baseline, While the Grayscale agent is much more aggressive in its driving strategy. Both the Kinematic and Grayscale agents use the same reward function. However, it is not clear at the moment why the two agents end up having such different driving strategies. In trying to reduce collision rate of the original Grayscale model, we experimented with various training techniques, and our result Grayscale\_v2 strikes a balance between speed and collision rate.
+
+\subsection{Grayscale Agent with Prioritized Experience Replay (PER) }
+
+We build upon our original DQN with Prioritized Experience Replay (PER) \cite{schaul2015prioritized}. Standard experience replay samples transitions uniformly at random from a buffer, however, not all transitions contribute equally to improving the policy.
+
+PER addresses this by assigning priority to each transition based on its temporal-difference (TD) error, effectively transforming the replay buffer into a priority queue. Transitions with high TD error are sampled more frequently, as these represent experiences the network has not yet learned well.
+
+To correct for the bias introduced by non-uniform sampling, importance sampling weights are applied during gradient updates. However, PER did not meaningfully reduce crash rate.
+
+\subsection{Grayscale Agent with PER, Curriculum Learning, and Epsilon Reheating \ref{fig:curriculum}}
+
+Building upon the Prioritized Experience Replay framework, we implemented a curriculum learning system that decomposes the training process into four stages of increasing complexity. The environment complexity is controlled by varying the number of surrounding vehicles: 5, 10, 15, and 20 cars respectively. The agent advances to the next level upon achieving an average crash rate below 20\% over 100 consecutive episodes.
+
+The motivation behind this approach is that policies learned in simpler environments can serve as effective initializations for more complex scenarios.
+
+We also introduced an epsilon reheating mechanism. When the crash rate fails to improve for a specified number of episodes or start to regress, epsilon is increased. This allows the agent to re-explore the environment while still leveraging previously learned behaviors.
+
+With the above changes, the crash rate plateaued at approximately 20-30\%, failing to reach our target of 15\%.
+
+\subsection{Grayscale Agent with PER, Double DQN, and NoisyNet (Grayscale\_v2 Agent) \ref{fig:noisynet}}
+
+Building upon the PER framework, we incorporated Double DQN to address the well-known overestimation of Q-values in standard DQN \cite{van2016deep}. In conventional DQN, the same network both selects and evaluates actions for computing target Q-values, which tends to overestimate action values. Double DQN decouples action selection from action evaluation: the online network selects the best action, while the target network evaluates its value. However, while Double DQN provided modest stability improvements, it did not fundamentally resolve the high crash rate we observed.
+
+Inspired by Fortunato et al. \cite{fortunato2017noisy}, we replaced epsilon-greedy exploration with NoisyNet, which introduces learnable noise parameters into the network. These noise parameters are trained through gradient descent like regular weights. During each forward pass, NoisyNet internally samples two non-learnable noise terms—one for the weights and one for the biases—from a Gaussian distribution. These sampled noise terms are multiplied by the learnable noise parameters to produce the final noisy weights and biases. Because the network’s output depends on this injected noise, the gradient adjusts the noise parameters: if exploration improves performance, gradient descent increases the noise parameters; if exploration increases the loss, gradient descent reduces them. This allows the agent to explore more in unfamiliar states.
+
+Our experiments showed that this approach yielded significant improvements in both the convergence rate and crash rate stability.
+
+\section{Conclusions}
+In conclusion, training an autonomous driving agent using reinforcement learning techniques with pure visual input is feasible. However, the training process is not trivial, and the trained model is often not reliable. For future improvements, a dual loop system where a closed loop subsystem controls the overall driving planning and an open loop subsystem controls the detailed maneuvers might be a better solution for this problem.  
+
+\clearpage
+\begin{thebibliography}{9}
+
+\bibitem{mnih2015}
+Mnih, V., Kavukcuoglu, K., Silver, D., et al. (2015). Human-level control through deep reinforcement learning. Nature, 518(7540), 529-533.
+
+\bibitem{wang2016}
+Wang, Z., Schaul, T., Hessel, M., van Hasselt, H., Lanctot, M., \& de Freitas, N. (2016). Dueling network architectures for deep reinforcement learning. In Proceedings of the 33rd International Conference on Machine Learning (ICML), 48:1995-2003.
+
+\bibitem{leurent2018}
+Leurent, E. (2018). An environment for autonomous driving decision-making. GitHub repository. https://github.com/eleurent/highway-env
+
+\bibitem{van2016deep}
+Van Hasselt, H., Guez, A., \& Silver, D. (2016). Deep reinforcement learning with double Q-learning. In Proceedings of the AAAI Conference on Artificial Intelligence.
+
+\bibitem{fortunato2017noisy}
+Fortunato, M., Azar, M. G., Piot, B., Menick, J., Osband, I., Graves, A., ... \& Legg, S. (2017). Noisy networks for exploration. arXiv preprint arXiv:1706.10295.
+
+\bibitem{schaul2015prioritized}
+Schaul, T., Quan, J., Antonoglou, I., \& Silver, D. (2015). Prioritized experience replay. arXiv preprint arXiv:1511.05952.
+
+\end{thebibliography}
+
+\clearpage
+    \section*{Appendix}
+    \subsection*{Appendix A}
+    Project Github Repo: https://github.com/gh0stintheshe11/SteerNet-v2
+    
+    % Appendix B images removed for testing - add back training_progress_curriculum.png and NoisyNet.png
+
+
+
+
+\newpage
+\section*{Contest for Information Sharing}
+As part of this course, we may share selected project materials (e.g., reports, presentation slides, and presentation recordings) on the course webpage as learning resources for future students. Additionally, we may use anonymized project information for internal statistical analysis of course outcomes. Please indicate your preferences below. \textit{Your choices will not affect your grade in any way.}
+
+\subsection*{Consent for Sharing Project Materials}
+\textit{Please keep the item you wish and remove the other one.}
+
+\begin{itemize}
+	\item All group members consent to allow the project materials (report, slides, and presentation recording) to be shared on the course page for future students.
+\end{itemize}
+
+\subsection*{Consent for Use of Project Information in Statistical Analysis}
+\textit{Please keep the item you wish and remove the other one.}
+\begin{itemize}
+	\item All group members consent to allow anonymized information about the project (e.g., topic, methods, outcomes, grades) to be used by the instructor for statistical analysis and course improvement.
+\end{itemize}
+
+\subsection*{Optional Comments}
+\textit{Please list any specific conditions or comments here.}
+
+\subsection*{Group Identification}
+
+\begin{itemize}
+	\item Group number: 25
+	\item Names of group members: Chen Hao Zhang, Lang Sun
+	\item Signature of of group members: Chen Hao Zhang, Lang Sun
+	\item Date: 2025-Dec-17
+\end{itemize}
+    
+\end{document}
